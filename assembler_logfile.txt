@@ -1,0 +1,247 @@
+
+buff::3000
+push 3
+div
+push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+String written successfully! Silentness: 0
+Wroten string: 1 3000
+
+newbuff::push 3
+div
+push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::3
+div
+push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+String written successfully! Silentness: 0
+Wroten string: 1 3
+
+newbuff::div
+push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 2
+
+newbuff::push 700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::700
+push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+String written successfully! Silentness: 0
+Wroten string: 1 700
+
+newbuff::push 100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::100
+div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+String written successfully! Silentness: 0
+Wroten string: 1 100
+
+newbuff::div
+sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::sub
+out
+hlt
+push 200
+div
+div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 2
+
+newbuff::sub
+out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::out
+hlt
+push 200
+div
+div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 3
+
+newbuff::out
+hlt
+push 200
+div
+div
+pop
+
+
+buff::hlt
+push 200
+div
+div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 5
+
+newbuff::hlt
+push 200
+div
+div
+pop
+
+
+buff::push 200
+div
+div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: -1
+
+newbuff::push 200
+div
+div
+pop
+
+
+buff::200
+div
+div
+pop
+
+String written successfully! Silentness: 0
+Wroten string: 1 200
+
+newbuff::div
+div
+pop
+
+
+buff::div
+pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 2
+
+newbuff::div
+pop
+
+
+buff::pop
+
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 2
+
+newbuff::pop
+
+
+buff::
+Failed to read argument!
+String written successfully! Silentness: 1
+Wroten string: 4
+
+newbuff::
