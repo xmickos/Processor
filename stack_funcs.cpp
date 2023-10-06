@@ -113,15 +113,20 @@ uint32_t Verificator(Stack *stk, FILE* logfile){      // Сделать это d
     return stk->errors;
 }
 
-uint32_t StackPop(Stack *stk, FILE *logfile){
+uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop){
     GENERAL_VERIFICATION(stk, logfile);
+    if(where_to_pop == nullptr){
+        printf("Bad fix, exiting.\n");
+        exit(-1);
+    }
 
     if(NeedToResize(stk, 0, logfile) == RESIZE_YES){
         StackResize(stk, logfile, 0);
     }
 
     fprintf(logfile, "Popping %f\n", stk->data[stk->size - 1]);
-    fprintf(stdin, "%f", stk->data[stk->size - 1]);
+    // fprintf(stdin, "%f", stk->data[stk->size - 1]); // ?
+    *where_to_pop = stk->data[stk->size - 1];
     stk->data[stk->size - 1] = POISON;
     stk->size--;
 

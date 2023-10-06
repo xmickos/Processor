@@ -1,13 +1,11 @@
-push 3000
-push 3
-div
-push 700
-push 100
-div
+in
+in
+mul
+push 4
+in
+in
+mul
+mul
 sub
 out
 hlt
-push 200
-div
-div
-pop

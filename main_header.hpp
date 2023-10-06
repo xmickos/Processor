@@ -4,6 +4,19 @@
 #include <string.h>
 #include "stack_headers.hpp"
 
+#pragma once
+//
+// typedef double Elem_t;      //CRINGE CRINGE CRINGE CRINGE
+//
+// struct Stack{               //CRINGE CRINGE CRINGE CRINGE
+//     size_t capacity = 0;    //CRINGE CRINGE CRINGE CRINGE
+//     size_t size = 0;        //CRINGE CRINGE CRINGE CRINGE
+//     Elem_t *data = nullptr; //CRINGE CRINGE CRINGE CRINGE
+//     unsigned long hash = 0; //CRINGE CRINGE CRINGE CRINGE
+//     uint32_t errors = 0;    //CRINGE CRINGE CRINGE CRINGE
+// };
+
+
 
 #define COMMAND_COMPARE_ASM(arg, value)         if(!strcmp(curr_command, arg)){            \
             int_command = value;                                                           \
@@ -37,4 +50,4 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile);
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 
-void general_cpu_func(const char* buff, Stack *stk, FILE* logfile);
+void kernel(const char* buff, Stack *stk, FILE* logfile);

@@ -110,7 +110,7 @@ uint32_t NeedToResize(Stack *stk, int direction, FILE* logfile);
 
 uint32_t Verificator(Stack *stk, FILE* logfile);
 
-uint32_t StackPop(Stack *stk, FILE *logfile);
+uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop);
 
 static uint32_t StackDump(Stack *stk, FILE *logfile);
 
