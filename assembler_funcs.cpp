@@ -22,61 +22,99 @@ char* read_from_file(char* filename, FILE* logfile){
 }
 
 void string_processing_asm(char* buff, FILE* output, FILE* logfile){
-    size_t i = 0;
-    int curr_arg = -1, int_command = -2;
+    size_t line_counter = 1;
+    int int_command = -2, int_arg = -2;
     bool silent_arg = false;
-    char curr_command[5], output_str[25];
+    char curr_command[5] = {}, curr_arg[5] = {}, output_str[25] = {};
 
-    while(*buff){
-        if(sscanf(buff, "%s", curr_command) == 0){
+    fprintf(logfile, "Initial buff::\n%s\n", buff);
+
+    while(*(buff + 1)){
+        if(!isalpha(*buff)) SKIP_STR();
+
+        if(sscanf(buff, "%4s", curr_command) == 0){
             fprintf(logfile, "Failed to read command!\n");
         }
 
-        buff += strlen(curr_command) + 1;
-        fprintf(logfile, "\nbuff::%s\n", buff);
+        buff += strlen(curr_command);
+        fprintf(logfile, "\ncommand: %s, strlen = %zu, buff::%s\n", curr_command, strlen(curr_command), buff);
 
-        if(sscanf(buff, "%d", &curr_arg) == 0 || *buff == '\0'){
+        if(*buff == '\n' || sscanf(buff, "%s", curr_arg) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
             silent_arg = true;
         }
 
-        COMMAND_COMPARE_ASM("push", PUSH);
-        COMMAND_COMPARE_ASM("div", DIV);
-        COMMAND_COMPARE_ASM("sub", SUB);
-        COMMAND_COMPARE_ASM("out", OUT);
-        COMMAND_COMPARE_ASM("pop", POP);
-        COMMAND_COMPARE_ASM("hlt", HLT);
-        COMMAND_COMPARE_ASM("in",  IN);
-        COMMAND_COMPARE_ASM("mul", MUL);
-
-
+        fprintf(logfile, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
 
         if(silent_arg){
+            COMMAND_COMPARE_ASM("div", DIV);
+            COMMAND_COMPARE_ASM("sub", SUB);
+            COMMAND_COMPARE_ASM("out", OUT);
+            COMMAND_COMPARE_ASM("hlt", HLT);
+            COMMAND_COMPARE_ASM("in",  IN);
+            COMMAND_COMPARE_ASM("mul", MUL);
+
+            if(int_command == -2){
+                fprintf(logfile, "Error: Unknown command: %s, line %zu\n", curr_command, line_counter);
+                continue;
+            }
+
             sprintf(output_str, "%d\n", int_command);
         }
         else{
-            sprintf(output_str, "%d %d\n", int_command, curr_arg);
+            fprintf(logfile, "Non-silent case.\n");
+            if(atoi(curr_arg) == 0){
+                REGISTER_COMPARE_ASM("rax", RAX);
+                REGISTER_COMPARE_ASM("rbx", RBX);
+                REGISTER_COMPARE_ASM("rcx", RCX);
+                REGISTER_COMPARE_ASM("rdx", RDX);
+
+                if(int_arg == -2){
+                    fprintf(logfile, "Error: Unknown argument at %zu line: %s\n", line_counter, curr_arg);
+                    SKIP_STR();
+                    continue;
+                }
+
+                COMMAND_COMPARE_ASM("push", RPUSH);
+                COMMAND_COMPARE_ASM("pop", POP);
+            }
+            else{
+                COMMAND_COMPARE_ASM("push", PUSH);
+                COMMAND_COMPARE_ASM("div", DIV);
+                COMMAND_COMPARE_ASM("sub", SUB);
+                COMMAND_COMPARE_ASM("out", OUT);
+                COMMAND_COMPARE_ASM("hlt", HLT);
+                COMMAND_COMPARE_ASM("in",  IN);
+                COMMAND_COMPARE_ASM("mul", MUL);
+
+                int_arg = atoi(curr_arg);
+            }
+            if(int_command == -2){
+                fprintf(logfile, "Error: Command %s can`t be used with argument %s, line %zu\n", curr_command,
+                        curr_arg, line_counter);
+                continue;
+            }
+            sprintf(output_str, "%d %d\n", int_command, int_arg);
         }
 
         if(fputs(output_str, output)){
-            fprintf(logfile, "String written successfully! Silentness: %d\n", silent_arg);
+            fprintf(logfile, "String written successfully!\n");
             fprintf(logfile, "Wroten string: %s\n", output_str);
         }
 
         if(!silent_arg){
-            while(buff[i] != '\n') i++;
-            buff += i + 1;
-            i = 0;
+            SKIP_STR();
         }
         fprintf(logfile, "newbuff::%s\n", buff);
         silent_arg = false;
+
+        line_counter++;
     }
 }
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
-    int int_command = -2;
     bool silent_arg = false;
-    char curr_command[5], output_str[25], trash[25], curr_arg[5];
+    char curr_command[5], output_str[25], curr_arg[5];
 
     while(*buff){
         sscanf(buff, "%s", curr_command);
@@ -115,6 +153,7 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
         COMMAND_COMPARE_DISASM("in" , IN);
         COMMAND_COMPARE_DISASM("mul", MUL);
 
+
         printf("\nreaded::%s, %s\n", curr_command, curr_arg);
 
         if(silent_arg){
@@ -122,6 +161,9 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
         }
         else{
             sprintf(output_str, "%s %s\n", curr_command, curr_arg);
+        }
+        if(atoi(curr_command) == -2){
+            strcpy(output_str, "Unknown machine word.\n");
         }
 
         if(fputs(output_str, output)){
@@ -134,11 +176,10 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
     }
 }
 
-void kernel(const char* buff, Stack *stk, FILE* logfile){
-    int int_command = -2;
-    bool silent_arg = false;
+int kernel(const char* buff, Processor *cpu, FILE* logfile){
     Elem_t first_operand = 0, second_operand = 1;
-    char curr_command[5], output_str[25], trash[25], curr_arg[5];
+    char curr_command[5], curr_arg[5];
+    Stack* stk = &(cpu->stk);
 
     while(*buff){
         sscanf(buff, "%s", curr_command);
@@ -155,7 +196,6 @@ void kernel(const char* buff, Stack *stk, FILE* logfile){
                 break;
             case '\n':
                 *curr_arg = '\0';
-                silent_arg = true;
                 buff++;
                 // printf("case 2\n");
                 break;
@@ -171,19 +211,51 @@ void kernel(const char* buff, Stack *stk, FILE* logfile){
         switch(atoi(curr_command)){
             case PUSH:
                 // printf("Case PUSH\n");
+                printf("\ncurr_arg = %s\n", curr_arg);
                 StackPush(stk, logfile, atoi(curr_arg));
                 break;
+            case RPUSH:
+                printf("Case RPUSH.\n");
+                fprintf(logfile, "Case RPUSH.\n");
+                switch(atoi(curr_arg)){
+                    case RAX:
+                        StackPush(stk, logfile, cpu->rax);
+                        break;
+                    case RBX:
+                        StackPush(stk, logfile, cpu->rbx);
+                        break;
+                    case RCX:
+                        StackPush(stk, logfile, cpu->rcx);
+                        break;
+                    case RDX:
+                        StackPush(stk, logfile, cpu->rdx);
+                        break;
+                }
+                break;
             case POP:
-                // printf("Case POP\n");
+                printf("Case Pop\n");
+                fprintf(logfile, "Case Pop\n");
                 StackPop(stk, logfile, &first_operand);
-                printf("%f\n", first_operand);
+                switch(atoi(curr_arg)){
+                    case RAX:
+                        cpu->rax = first_operand;
+                        break;
+                    case RBX:
+                        cpu->rbx = first_operand;                   // Можно упростить препроцессором ?
+                        break;
+                    case RCX:
+                        cpu->rcx = first_operand;
+                        break;
+                    case RDX:
+                        cpu->rdx = first_operand;
+                        break;
+                }
                 break;
             case DIV:
-                // printf("Case DIV\n");
+                printf("Case DIV\n");
+                fprintf(logfile, "Case DIV\n");
                 StackPop(stk, logfile, &second_operand);
-                // fscanf(stdin, "%lf", &second_operand);
                 StackPop(stk, logfile, &first_operand);
-                // fscanf(stdin, "%lf", &first_operand);
                 if(!IsEqual(second_operand, EPS)){
                     StackPush(stk, logfile, first_operand / second_operand);
                 }
@@ -192,34 +264,38 @@ void kernel(const char* buff, Stack *stk, FILE* logfile){
                 }
                 break;
             case SUB:
-                // printf("Case SUB\n");
+                printf("Case SUB\n");
+                fprintf(logfile, "Case SUB\n");
                 StackPop(stk, logfile, &second_operand);
-                // fscanf(stdin, "%lf", &second_operand);
                 StackPop(stk, logfile, &first_operand);
-                // fscanf(stdin, "%lf", &first_operand);
                 StackPush(stk, logfile, first_operand - second_operand);
                 break;
             case IN:
+                printf("Case IN\n");
+                fprintf(logfile, "Case IN\n");
                 fscanf(stdin, "%lf", &first_operand);
                 StackPush(stk, logfile, first_operand);
                 break;
             case MUL:
+                printf("Case MUL\n");
+                fprintf(logfile, "Case MUL\n");
                 StackPop(stk, logfile, &first_operand);
                 StackPop(stk, logfile, &second_operand);
                 StackPush(stk, logfile, first_operand * second_operand);
                 break;
             case OUT:
-                // printf("Case OUT\n");
+                printf("Case OUT\n");
+                fprintf(logfile, "Case OUT\n");
                 StackPop(stk, logfile, &first_operand);
-                // fscanf(stdin, "%lf", &first_operand);
                 fprintf(stdout, "\t\t\t\t[OUT]: %f\n", first_operand);
                 break;
             case HLT:
-                // printf("Case HLT\n");
+                printf("Case HLT\n");
+                fprintf(logfile, "Case HLT\n");
                 fprintf(stdout, "HALT: exiting...\n");
-                exit(-1);
+                return 0;
         }
 
     }
-
+    return 0;
 }

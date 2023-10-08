@@ -1,9 +1,35 @@
-
-buff::in
+Initial buff::
+in
+pop rax
+in
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
 mul
 push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: in, strlen = 2, buff::
+pop rax
 in
+pop rbx
 in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
 mul
 mul
 sub
@@ -11,14 +37,61 @@ out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = in, curr_arg = , Silentness = 1
+String written successfully!
 Wroten string: 6
+
+newbuff::
+pop rax
+in
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: pop, strlen = 3, buff:: rax
+in
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = pop, curr_arg = rax, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 43 1
 
 newbuff::in
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
 mul
 push 4
-in
-in
+push rax
+push rcx
 mul
 mul
 sub
@@ -26,10 +99,16 @@ out
 hlt
 
 
-buff::mul
+command: in, strlen = 2, buff::
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
 push 4
-in
-in
+push rax
+push rcx
 mul
 mul
 sub
@@ -37,13 +116,176 @@ out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = in, curr_arg = rax, Silentness = 1
+String written successfully!
 Wroten string: 6
+
+newbuff::
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: pop, strlen = 3, buff:: rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = pop, curr_arg = rbx, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 43 2
+
+newbuff::in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: in, strlen = 2, buff::
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+Failed to read argument!
+curr_command = in, curr_arg = rbx, Silentness = 1
+String written successfully!
+Wroten string: 6
+
+newbuff::
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: pop, strlen = 3, buff:: rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = pop, curr_arg = rcx, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 43 3
+
+newbuff::push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, strlen = 4, buff:: rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rbx, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 33 2
+
+newbuff::push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, strlen = 4, buff:: rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rbx, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 33 2
 
 newbuff::mul
 push 4
-in
-in
+push rax
+push rcx
 mul
 mul
 sub
@@ -51,9 +293,10 @@ out
 hlt
 
 
-buff::push 4
-in
-in
+command: mul, strlen = 3, buff::
+push 4
+push rax
+push rcx
 mul
 mul
 sub
@@ -61,12 +304,14 @@ out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = mul, curr_arg = rbx, Silentness = 1
+String written successfully!
 Wroten string: 7
 
-newbuff::push 4
-in
-in
+newbuff::
+push 4
+push rax
+push rcx
 mul
 mul
 sub
@@ -74,20 +319,22 @@ out
 hlt
 
 
-buff::4
-in
-in
+command: push, strlen = 4, buff:: 4
+push rax
+push rcx
 mul
 mul
 sub
 out
 hlt
 
-String written successfully! Silentness: 0
+curr_command = push, curr_arg = 4, Silentness = 0
+Non-silent case.
+String written successfully!
 Wroten string: 1 4
 
-newbuff::in
-in
+newbuff::push rax
+push rcx
 mul
 mul
 sub
@@ -95,18 +342,20 @@ out
 hlt
 
 
-buff::in
+command: push, strlen = 4, buff:: rax
+push rcx
 mul
 mul
 sub
 out
 hlt
 
-Failed to read argument!
-String written successfully! Silentness: 1
-Wroten string: 6
+curr_command = push, curr_arg = rax, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 33 1
 
-newbuff::in
+newbuff::push rcx
 mul
 mul
 sub
@@ -114,15 +363,17 @@ out
 hlt
 
 
-buff::mul
+command: push, strlen = 4, buff:: rcx
+mul
 mul
 sub
 out
 hlt
 
-Failed to read argument!
-String written successfully! Silentness: 1
-Wroten string: 6
+curr_command = push, curr_arg = rcx, Silentness = 0
+Non-silent case.
+String written successfully!
+Wroten string: 33 3
 
 newbuff::mul
 mul
@@ -131,57 +382,72 @@ out
 hlt
 
 
-buff::mul
+command: mul, strlen = 3, buff::
+mul
 sub
 out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = mul, curr_arg = rcx, Silentness = 1
+String written successfully!
 Wroten string: 7
 
-newbuff::mul
+newbuff::
+mul
 sub
 out
 hlt
 
 
-buff::sub
+command: mul, strlen = 3, buff::
+sub
 out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = mul, curr_arg = rcx, Silentness = 1
+String written successfully!
 Wroten string: 7
 
-newbuff::sub
+newbuff::
+sub
 out
 hlt
 
 
-buff::out
+command: sub, strlen = 3, buff::
+out
 hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = sub, curr_arg = rcx, Silentness = 1
+String written successfully!
 Wroten string: 3
 
-newbuff::out
+newbuff::
+out
 hlt
 
 
-buff::hlt
+command: out, strlen = 3, buff::
+hlt
 
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = out, curr_arg = rcx, Silentness = 1
+String written successfully!
 Wroten string: 5
 
-newbuff::hlt
+newbuff::
+hlt
 
 
-buff::
+command: hlt, strlen = 3, buff::
+
 Failed to read argument!
-String written successfully! Silentness: 1
+curr_command = hlt, curr_arg = rcx, Silentness = 1
+String written successfully!
 Wroten string: -1
 
 newbuff::
+

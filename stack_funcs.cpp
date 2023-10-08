@@ -180,13 +180,14 @@ uint32_t StackCtor(Stack *stk, size_t capacity, FILE* logfile){
 
 
     stk->data = (Elem_t*)calloc(capacity * sizeof(Elem_t) + 2 * sizeof(Canary_t), sizeof(char));
+    #ifdef DEBUG
     printf("allocated %lu bytes of memory\n", capacity * sizeof(Elem_t) + 2 * sizeof(Canary_t));
+    #endif
     stk->data++;
 
     /**
      * Пока вторая канарейка хэшируется, потом это можно исправить, добавив в функцию хэша длину хэшируемого блока памяти.
      */
-
     if(stk->data == nullptr){
         DEBUG_ECHO(logfile, "Failed to allocate memory – not enought free space!\n");
         return STK_NULLPTR;

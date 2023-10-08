@@ -1,4 +1,5 @@
-in
+Unknown machine word.
+Unknown machine word.
 in
 mul
 push 4

@@ -4,14 +4,14 @@ int main(){
     FILE *logfile = fopen("vm_logfile.txt", "w");
     FILE *input_file = fopen("assembler_output.txt", "r");
     char name[25] = "assembler_output.txt", *buff = nullptr;
-    Stack stk = {};
+    Processor cpu = {};
 
-    StackCtor(&stk, 10, logfile);
+    StackCtor(&cpu.stk, 10, logfile);
     buff = read_from_file(name, logfile);
 
-    printf("\nReaded buff:%s", buff);
+    // printf("\nReaded buff:\n%s", buff);
 
-    kernel(buff, &stk, logfile);
+    kernel(buff, &cpu, logfile);
 
 
     free(buff);
