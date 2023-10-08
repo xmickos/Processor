@@ -5,6 +5,8 @@
 #include <ctype.h>
 #include "stack_headers.hpp"
 
+// #define DEBUG
+
 #pragma once
 
 struct Processor{
@@ -12,6 +14,10 @@ struct Processor{
     Elem_t rax = 0, rbx = 0, rcx = 0, rdx = 0;
 };
 
+#define CPU_VERIF(condition, message)     do{ if(condition){                               \
+        fprintf(logfile, "[CPU Verificator] " message "\n");                               \
+        return -1;                                                                         \
+    } }while(0)                                                                            \
 
 #define COMMAND_COMPARE_ASM(arg, value)         if(!strcmp(curr_command, arg)){            \
             int_command = value;                                                           \
@@ -56,3 +62,11 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile);
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 
 int kernel(const char* buff, Processor *cpu, FILE* logfile);
+
+int CpuDtor(Processor *cpu, FILE* logfile);
+
+uint32_t CpuVerificator(Processor *cpu, FILE* logfile);
+
+uint32_t CpuDump(Processor *cpu, FILE* logfile);
+
+int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile);

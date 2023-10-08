@@ -1,26 +1,36 @@
 String written successfully! Silentness: 1
-Wroten string: Unknown machine word.
+Wroten string: in
 
-newbuff::-2
+newbuff::43 1
 6
+43 2
+6
+43 3
+33 2
+33 2
 7
 1 4
-6
-6
+33 1
+33 3
 7
 7
 3
 5
 -1
 
-String written successfully! Silentness: 1
-Wroten string: Unknown machine word.
+String written successfully! Silentness: 0
+Wroten string: pop rax
 
 newbuff::6
+43 2
+6
+43 3
+33 2
+33 2
 7
 1 4
-6
-6
+33 1
+33 3
 7
 7
 3
@@ -30,10 +40,90 @@ newbuff::6
 String written successfully! Silentness: 1
 Wroten string: in
 
+newbuff::43 2
+6
+43 3
+33 2
+33 2
+7
+1 4
+33 1
+33 3
+7
+7
+3
+5
+-1
+
+String written successfully! Silentness: 0
+Wroten string: pop rbx
+
+newbuff::6
+43 3
+33 2
+33 2
+7
+1 4
+33 1
+33 3
+7
+7
+3
+5
+-1
+
+String written successfully! Silentness: 1
+Wroten string: in
+
+newbuff::43 3
+33 2
+33 2
+7
+1 4
+33 1
+33 3
+7
+7
+3
+5
+-1
+
+String written successfully! Silentness: 0
+Wroten string: pop rcx
+
+newbuff::33 2
+33 2
+7
+1 4
+33 1
+33 3
+7
+7
+3
+5
+-1
+
+String written successfully! Silentness: 0
+Wroten string: push rbx
+
+newbuff::33 2
+7
+1 4
+33 1
+33 3
+7
+7
+3
+5
+-1
+
+String written successfully! Silentness: 0
+Wroten string: push rbx
+
 newbuff::7
 1 4
-6
-6
+33 1
+33 3
 7
 7
 3
@@ -44,8 +134,8 @@ String written successfully! Silentness: 1
 Wroten string: mul
 
 newbuff::1 4
-6
-6
+33 1
+33 3
 7
 7
 3
@@ -55,26 +145,26 @@ newbuff::1 4
 String written successfully! Silentness: 0
 Wroten string: push 4
 
-newbuff::6
-6
+newbuff::33 1
+33 3
 7
 7
 3
 5
 -1
 
-String written successfully! Silentness: 1
-Wroten string: in
+String written successfully! Silentness: 0
+Wroten string: push rax
 
-newbuff::6
+newbuff::33 3
 7
 7
 3
 5
 -1
 
-String written successfully! Silentness: 1
-Wroten string: in
+String written successfully! Silentness: 0
+Wroten string: push rcx
 
 newbuff::7
 7

@@ -1,0 +1,54 @@
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+[StackPush, line: 219] Pushed 1.000000 successfully!
+Popping 1.000000
+[StackPush, line: 219] Pushed 4.000000 successfully!
+Popping 4.000000
+[StackPush, line: 219] Pushed -9.000000 successfully!
+Popping -9.000000
+[StackPush, line: 219] Pushed 4.000000 successfully!
+[StackPush, line: 219] Pushed 4.000000 successfully!
+Popping 4.000000
+Popping 4.000000
+[StackPush, line: 219] Pushed 16.000000 successfully!
+[StackPush, line: 219] Pushed 4.000000 successfully!
+[StackPush, line: 219] Pushed 1.000000 successfully!
+[StackPush, line: 219] Pushed -9.000000 successfully!
+Popping -9.000000
+Popping 1.000000
+[StackPush, line: 219] Pushed -9.000000 successfully!
+Popping -9.000000
+Popping 4.000000
+[StackPush, line: 219] Pushed -36.000000 successfully!
+Popping -36.000000
+Popping 16.000000
+[StackPush, line: 219] Pushed 52.000000 successfully!
+Popping 52.000000
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY

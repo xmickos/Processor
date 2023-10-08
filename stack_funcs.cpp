@@ -135,7 +135,7 @@ uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop){
     return 0;
 }
 
-static uint32_t StackDump(Stack *stk, FILE *logfile){
+uint32_t StackDump(Stack *stk, FILE *logfile){
     // GENERAL_VERIFICATION(stk, logfile);
     DEBUG_ECHO(stdout, "");
 

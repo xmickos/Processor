@@ -21,6 +21,46 @@ char* read_from_file(char* filename, FILE* logfile){
     return buff;
 }
 
+int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
+    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
+    CPU_VERIF(logfile == nullptr, "logfile is nullptr!");
+    CPU_VERIF(capacity == 0, "capacity is zero!");
+
+    StackCtor(&(cpu->stk), capacity, logfile);
+    cpu->rax = 0;
+    cpu->rbx = 0;
+    cpu->rcx = 0;
+    cpu->rdx = 0;
+    return 0;
+}
+
+int CpuDtor(Processor *cpu, FILE* logfile){
+    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
+    StackDtor(&(cpu->stk), logfile);
+    cpu->rax = POISON;
+    cpu->rbx = POISON;
+    cpu->rcx = POISON;
+    cpu->rdx = POISON;
+    return 0;
+}
+
+uint32_t CpuVerificator(Processor *cpu, FILE* logfile){
+    // CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
+    if(cpu == nullptr){
+        fprintf(logfile, "[CPU Verificator] cpu is nullptr!\n");
+        return SINGLE_BIT(11);
+    }
+    GENERAL_VERIFICATION(&(cpu->stk), logfile);
+    return 0;
+}
+
+uint32_t CpuDump(Processor *cpu, FILE* logfile){
+    fprintf(logfile, "[CPU DUMP]\nRegisters:\n\trax = %f\n\trbx = %f\n\trcx = %f\n\trdx = %f\n", cpu->rax, cpu->rbx,
+            cpu->rcx, cpu->rdx);
+
+    return StackDump(&(cpu->stk), logfile);
+}
+
 void string_processing_asm(char* buff, FILE* output, FILE* logfile){
     size_t line_counter = 1;
     int int_command = -2, int_arg = -2;
@@ -114,6 +154,7 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile){
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
     bool silent_arg = false;
+    int int_command = -2;
     char curr_command[5], output_str[25], curr_arg[5];
 
     while(*buff){
@@ -143,8 +184,10 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
                 buff++;
         }
         printf("curr_arg = %s\n", curr_arg);
+        int_command = atoi(curr_command);
 
         COMMAND_COMPARE_DISASM("push", PUSH);
+        COMMAND_COMPARE_DISASM("push", RPUSH);
         COMMAND_COMPARE_DISASM("div", DIV);
         COMMAND_COMPARE_DISASM("sub", SUB);
         COMMAND_COMPARE_DISASM("out", OUT);
@@ -160,6 +203,25 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
             sprintf(output_str, "%s\n", curr_command);
         }
         else{
+            if(int_command == RPUSH || int_command == POP){
+                switch(atoi(curr_arg)){
+                    case RAX:
+                        strcpy(curr_arg, "rax");
+                        break;
+                    case RBX:
+                        strcpy(curr_arg, "rbx");
+                        break;
+                    case RCX:
+                        strcpy(curr_arg, "rcx");
+                        break;
+                    case RDX:
+                        strcpy(curr_arg, "rdx");
+                        break;
+                    default:
+                        fprintf(logfile, "Error: Unknown register code!\n");
+                        break;
+                }
+            }
             sprintf(output_str, "%s %s\n", curr_command, curr_arg);
         }
         if(atoi(curr_command) == -2){
@@ -210,13 +272,19 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile){
 
         switch(atoi(curr_command)){
             case PUSH:
-                // printf("Case PUSH\n");
+                #ifdef DEBUG
+                printf("Case PUSH\n");
                 printf("\ncurr_arg = %s\n", curr_arg);
+                #endif
+
                 StackPush(stk, logfile, atoi(curr_arg));
                 break;
             case RPUSH:
+                #ifdef DEBUG
                 printf("Case RPUSH.\n");
                 fprintf(logfile, "Case RPUSH.\n");
+                #endif
+
                 switch(atoi(curr_arg)){
                     case RAX:
                         StackPush(stk, logfile, cpu->rax);
@@ -233,8 +301,11 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile){
                 }
                 break;
             case POP:
+                #ifdef DEBUG
                 printf("Case Pop\n");
                 fprintf(logfile, "Case Pop\n");
+                #endif
+
                 StackPop(stk, logfile, &first_operand);
                 switch(atoi(curr_arg)){
                     case RAX:
@@ -252,8 +323,11 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile){
                 }
                 break;
             case DIV:
+                #ifdef DEBUG
                 printf("Case DIV\n");
                 fprintf(logfile, "Case DIV\n");
+                #endif
+
                 StackPop(stk, logfile, &second_operand);
                 StackPop(stk, logfile, &first_operand);
                 if(!IsEqual(second_operand, EPS)){
@@ -264,34 +338,49 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile){
                 }
                 break;
             case SUB:
+                #ifdef DEBUG
                 printf("Case SUB\n");
                 fprintf(logfile, "Case SUB\n");
+                #endif
+
                 StackPop(stk, logfile, &second_operand);
                 StackPop(stk, logfile, &first_operand);
                 StackPush(stk, logfile, first_operand - second_operand);
                 break;
             case IN:
+                #ifdef DEBUG
                 printf("Case IN\n");
                 fprintf(logfile, "Case IN\n");
+                #endif
+
                 fscanf(stdin, "%lf", &first_operand);
                 StackPush(stk, logfile, first_operand);
                 break;
             case MUL:
+                #ifdef DEBUG
                 printf("Case MUL\n");
                 fprintf(logfile, "Case MUL\n");
+                #endif
+
                 StackPop(stk, logfile, &first_operand);
                 StackPop(stk, logfile, &second_operand);
                 StackPush(stk, logfile, first_operand * second_operand);
                 break;
             case OUT:
+                #ifdef DEBUG
                 printf("Case OUT\n");
                 fprintf(logfile, "Case OUT\n");
+                #endif
+
                 StackPop(stk, logfile, &first_operand);
                 fprintf(stdout, "\t\t\t\t[OUT]: %f\n", first_operand);
                 break;
             case HLT:
+                #ifdef DEBUG
                 printf("Case HLT\n");
                 fprintf(logfile, "Case HLT\n");
+                #endif
+
                 fprintf(stdout, "HALT: exiting...\n");
                 return 0;
         }
