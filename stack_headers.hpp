@@ -8,7 +8,7 @@
 #define POISON 0xC0DEDEAD
 #define BASIC_POISON 0xC67178F2
 #define EPS 1e-3
-// #define DEBUG
+#define DEBUG
 
 #define SINGLE_BIT(bit) (1U << (unsigned) bit)
 

@@ -13,30 +13,520 @@ stk->capacity: 10.
 	stk->data[8] = POISON
 	stk->data[9] = POISON
 	stk->data[10] = SECOND_CANARY
+Case IN
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 [StackPush, line: 219] Pushed 1.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 0.000000
+	rbx = 0.000000
+	rcx = 0.000000
+	rdx = 0.000000
+PC: 1
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 1.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case Pop
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 Popping 1.000000
+[StackPop, line: 133]Popped succesfully!
+
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 0.000000
+	rcx = 0.000000
+	rdx = 0.000000
+PC: 2
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case IN
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed 2.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 0.000000
+	rcx = 0.000000
+	rdx = 0.000000
+PC: 3
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 2.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case Pop
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping 2.000000
+[StackPop, line: 133]Popped succesfully!
+
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = 0.000000
+	rdx = 0.000000
+PC: 4
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case IN
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed -5.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = 0.000000
+	rdx = 0.000000
+PC: 5
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = -5.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case Pop
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping -5.000000
+[StackPop, line: 133]Popped succesfully!
+
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 6
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case RPUSH.
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed 2.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 7
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 2.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case RPUSH.
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed 2.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 8
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 2,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 2.000000
+	stk->data[1] = 2.000000
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case MUL
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping 2.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping 2.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 [StackPush, line: 219] Pushed 4.000000 successfully!
-Popping 4.000000
-[StackPush, line: 219] Pushed -9.000000 successfully!
-Popping -9.000000
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 9
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 [StackPush, line: 219] Pushed 4.000000 successfully!
-[StackPush, line: 219] Pushed 4.000000 successfully!
-Popping 4.000000
-Popping 4.000000
-[StackPush, line: 219] Pushed 16.000000 successfully!
-[StackPush, line: 219] Pushed 4.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 10
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 2,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = 4.000000
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case RPUSH.
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 [StackPush, line: 219] Pushed 1.000000 successfully!
-[StackPush, line: 219] Pushed -9.000000 successfully!
-Popping -9.000000
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 11
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 3,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = 4.000000
+	stk->data[2] = 1.000000
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case RPUSH.
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed -5.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 12
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 4,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = 4.000000
+	stk->data[2] = 1.000000
+	stk->data[3] = -5.000000
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case MUL
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping -5.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 Popping 1.000000
-[StackPush, line: 219] Pushed -9.000000 successfully!
-Popping -9.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed -5.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 13
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 3,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = 4.000000
+	stk->data[2] = -5.000000
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case MUL
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping -5.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
 Popping 4.000000
-[StackPush, line: 219] Pushed -36.000000 successfully!
-Popping -36.000000
-Popping 16.000000
-[StackPush, line: 219] Pushed 52.000000 successfully!
-Popping 52.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed -20.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 14
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 2,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 4.000000
+	stk->data[1] = -20.000000
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case SUB
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping -20.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping 4.000000
+[StackPop, line: 133]Popped succesfully!
+
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+[StackPush, line: 219] Pushed 24.000000 successfully!
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 15
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 1,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = 24.000000
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case OUT
+[Verificator, line: 107]No errors found!
+
+[Verificator, line: 107]No errors found!
+
+Popping 24.000000
+[StackPop, line: 133]Popped succesfully!
+
+[CPU DUMP]
+Registers:
+	rax = 1.000000
+	rbx = 2.000000
+	rcx = -5.000000
+	rdx = 0.000000
+PC: 16
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+stk->size: 0,
+stk->capacity: 10.
+	stk->data[18446744073709551615] = FIRST_CANARY
+	stk->data[0] = POISON
+	stk->data[1] = POISON
+	stk->data[2] = POISON
+	stk->data[3] = POISON
+	stk->data[4] = POISON
+	stk->data[5] = POISON
+	stk->data[6] = POISON
+	stk->data[7] = POISON
+	stk->data[8] = POISON
+	stk->data[9] = POISON
+	stk->data[10] = SECOND_CANARY
+Case HLT
+[Verificator, line: 107]No errors found!
+
 [DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
 stk->size: 0,
 stk->capacity: 10.

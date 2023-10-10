@@ -5,37 +5,56 @@
 #include <ctype.h>
 #include "stack_headers.hpp"
 
-// #define DEBUG
+#define DEBUG
+
 
 #pragma once
 
 struct Processor{
     Stack stk;
-    Elem_t rax = 0, rbx = 0, rcx = 0, rdx = 0;
+    Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
+    size_t programm_counter = 1;
 };
+
+#define INIT_LEN 25
+
+#define VM_POISON -2
+
+#define STRINGIFY(val) #val
 
 #define CPU_VERIF(condition, message)     do{ if(condition){                               \
         fprintf(logfile, "[CPU Verificator] " message "\n");                               \
         return -1;                                                                         \
     } }while(0)                                                                            \
 
-#define COMMAND_COMPARE_ASM(arg, value)         if(!strcmp(curr_command, arg)){            \
-            int_command = value;                                                           \
-        }                                                                                  \
+#define COMMAND_COMPARE_ASM(arg, value, curr_command, int_command)         if(!strcmp(curr_command, arg)){            \
+            int_command = value;                                                                                      \
+        }                                                                                                             \
 
-#define REGISTER_COMPARE_ASM(arg, value)        if(!strcmp(curr_arg, arg)){                \
-            int_arg = value;                                                               \
-        }                                                                                  \
+#define REGISTER_COMPARE_ASM(arg, value, curr_arg, int_arg)        if(!strcmp(curr_arg, arg)){                        \
+            int_arg = value;                                                                                          \
+        }                                                                                                             \
 
 
-#define COMMAND_COMPARE_DISASM(string_arg, value)         if(atoi(curr_command) == value){           \
-            printf("%s!  Silent: %d\n", string_arg, silent_arg);                                     \
-            strcpy(curr_command, string_arg);                                                        \
-        }                                                                                            \
+#define COMMAND_COMPARE_DISASM(string_arg, value, silent_arg, int_command, out_str)         if(int_command == value){ \
+            printf("%s!  Silent: %d\n", string_arg, silent_arg);                                                      \
+            strcpy(out_str, string_arg);                                                                              \
+        }                                                                                                             \
 
 #define SKIP_STR() do{ while(*buff != '\n' && *buff != '\0') buff++;                                 \
                         buff++;  } while(0)                                                          \
 
+#define REG_ASSIGN(cpu, logfile, register, value)                     case register:                 \
+                        cpu->register = value;                                                       \
+                        break;                                                                       \
+
+#define PUSH_FR_REG(stk, logfile, register)                     case register:                       \
+                        StackPush(stk, logfile, cpu->register);                                      \
+                        break;                                                                       \
+
+#define COPY_FR_REG(register, register_name, out_str)                     case register:             \
+                        strcpy(out_str, #register_name);                                             \
+                        break;                                                                       \
 
 enum FUNC_CODES{
     PUSH = (1),
@@ -52,7 +71,8 @@ enum FUNC_CODES{
     RAX  = (1),
     RBX  = (2),
     RCX  = (3),
-    RDX  = (4)
+    RDX  = (4),
+    CPU_VERSION = (9)
 };
 
 char* read_from_file(char* filename, FILE* logfile);
