@@ -14,6 +14,7 @@ struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
     size_t programm_counter = 1;
+    int cs[128] = {};
 };
 
 #define INIT_LEN 25
@@ -56,6 +57,14 @@ struct Processor{
                         strcpy(out_str, #register_name);                                             \
                         break;                                                                       \
 
+#ifdef DEBUG
+#define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                            \
+                fprintf(logfile, "Case" #COMMAND_NAME "\n");} while(0)                               \
+#else
+#define SWITCH_ECHO(COMMAND_NAME) ;
+#endif
+
+
 enum FUNC_CODES{
     PUSH = (1),
     RPUSH= (33),
@@ -72,16 +81,19 @@ enum FUNC_CODES{
     RBX  = (2),
     RCX  = (3),
     RDX  = (4),
-    CPU_VERSION = (9)
+    CPU_VERSION = (9),
+    NUM_OF_REGS = (4),
+    NUM_OF_COMMANDS = (11),
+    CPU_CS_SIZE = (128)
 };
 
 char* read_from_file(char* filename, FILE* logfile);
 
-void string_processing_asm(char* buff, FILE* output, FILE* logfile);
+void string_processing_asm(char* buff, FILE* output, FILE* bin_output, FILE* logfile);
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 
-int kernel(const char* buff, Processor *cpu, FILE* logfile);
+int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff);
 
 int CpuDtor(Processor *cpu, FILE* logfile);
 
@@ -90,3 +102,5 @@ uint32_t CpuVerificator(Processor *cpu, FILE* logfile);
 uint32_t CpuDump(Processor *cpu, FILE* logfile);
 
 int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile);
+
+int* read_from_bin_file(char* filename, FILE* logfile);

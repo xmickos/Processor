@@ -21,6 +21,27 @@ char* read_from_file(char* filename, FILE* logfile){
     return buff;
 }
 
+int* read_from_bin_file(char* filename, FILE* logfile){
+    FILE* input_file = fopen(filename, "rb");
+    struct stat filestat;
+    size_t size = 0;
+
+    stat(filename, &filestat);
+    size = filestat.st_size / 4;
+    printf("size from file: %lu\n", size);
+
+    int *buff = (int*)calloc(size + 1, sizeof(int));
+
+    if(fread(buff, sizeof(int), size + 1, input_file) < size){
+        fprintf(logfile, "fread readed less than size!\n");
+    }
+
+    buff[size] = VM_POISON;
+
+    fclose(input_file);
+    return buff;
+}
+
 int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
     CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
     CPU_VERIF(logfile == nullptr, "logfile is nullptr!");
@@ -61,25 +82,30 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile){
     return StackDump(&(cpu->stk), logfile);
 }
 
-void string_processing_asm(char* buff, FILE* output, FILE* logfile){
-    size_t line_counter = 0, len = 0;
-    int int_command = VM_POISON, int_arg = VM_POISON;
+void string_processing_asm(char* buff, FILE* output, FILE* bin_output, FILE* logfile){
+    size_t line_counter = 0, len = 0, binary_pos_counter = 0;
+    int int_command = VM_POISON, int_arg = VM_POISON, *binary_code = nullptr;
     bool silent_arg = false;
-    char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[INIT_LEN] = {};
+    char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[2 * INIT_LEN] = {};
 
     fprintf(logfile, "Initial buff::\n%s\n", buff);
 
-    sprintf(version, "VERSION: %d\n", CPU_VERSION);
+    sprintf(version, "VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
+    fputs(version, output);
 
-    // fputs(version, output);
+    binary_code = (int*)calloc(strlen(buff) + 4, sizeof(int)); //3 + 1 = 4forCPU_VERSION NUM_OF_REGS VM_POISON NUM_OF_CO
+
+    binary_code[0] = CPU_VERSION;
+    binary_code[1] = NUM_OF_REGS;
+    binary_code[2] = NUM_OF_COMMANDS;
+    binary_pos_counter+=3;
 
     while(buff[1]){
         if(!isalpha(*buff)) SKIP_STR();
 
-        if(sscanf(buff, "%" STRINGIFY(INIT_LEN - 1) "s%n", curr_command, &len) == 0){
+        if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 = STRINGIFY(INIT_LEN - 1)
             fprintf(logfile, "Failed to read command!\n");
         }
-
         buff += len;
         fprintf(logfile, "\ncommand: %s, strlen = %zu, buff::%s\n", curr_command, strlen(curr_command), buff);
 
@@ -104,6 +130,8 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile){
             }
 
             sprintf(output_str, "%d\n", int_command);
+            binary_code[binary_pos_counter++] = int_command;
+
         }
         else{
             fprintf(logfile, "Non-silent case.\n");
@@ -139,6 +167,9 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile){
                 continue;
             }
             sprintf(output_str, "%d %d\n", int_command, int_arg);
+            binary_code[binary_pos_counter++] = int_command;
+            binary_code[binary_pos_counter++] = int_arg;
+
         }
 
         if(fputs(output_str, output)){
@@ -154,6 +185,21 @@ void string_processing_asm(char* buff, FILE* output, FILE* logfile){
 
         line_counter++;
     }
+
+    binary_code[binary_pos_counter++] = 2147483647;
+
+    fwrite(binary_code, sizeof(int), binary_pos_counter + 2, bin_output);
+
+    #ifdef DEBUG
+    printf("Binary code array:\n");
+    for(int i = 0; i < binary_pos_counter; i++){
+        if(binary_code[i] == VM_POISON){
+            printf("\n");
+            continue;
+        }
+        printf("%d ", binary_code[i]);
+    }
+    #endif
 }
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
@@ -234,11 +280,140 @@ void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
     }
 }
 
-int kernel(const char* buff, Processor *cpu, FILE* logfile){
+int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
     size_t len = 0;
     char curr_command[INIT_LEN], curr_arg[INIT_LEN];
+    int int_command = 0, int_arg = VM_POISON, int_reg = VM_POISON;
     Stack* stk = &(cpu->stk);
+
+//     sscanf(buff, "VERSION: %d, %d REGISTERS, %d COMMANDS", &cpu_version, &num_of_regs, &num_of_commands);
+//     printf("%d %d %08x\n", cpu_version, num_of_regs, num_of_commands);
+//
+//     if(cpu_version != CPU_VERSION || num_of_regs != NUM_OF_REGS || num_of_commands != NUM_OF_COMMANDS){
+//         fprintf(stdout, "Wrong signature! Exiting...\n");
+//         return -1;
+//     }
+
+    if(bin_buff[0] != CPU_VERSION || bin_buff[1] != NUM_OF_REGS || bin_buff[2] != NUM_OF_COMMANDS){
+        fprintf(stdout, "Wrong signature! Exiting...\n");
+        return -1;
+    }
+
+
+    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[i + 1] != VM_POISON; i++){
+        cpu->cs[i] = bin_buff[i];
+    }
+
+    for(;cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != VM_POISON;){
+        int_command = cpu->cs[cpu->programm_counter++];
+
+
+        switch(int_command){
+            case RPUSH:
+                #ifdef DEBUG
+                printf("Case RPUSH.\n");
+                fprintf(logfile, "Case RPUSH.\n");
+                #endif
+
+                int_reg = cpu->cs[cpu->programm_counter + 1];
+                cpu->programm_counter++;
+                switch(int_reg){
+                    PUSH_FR_REG(stk, logfile, RAX);
+                    PUSH_FR_REG(stk, logfile, RBX);
+                    PUSH_FR_REG(stk, logfile, RCX);
+                    PUSH_FR_REG(stk, logfile, RDX);
+                }
+                continue;
+            case PUSH:
+                #ifdef DEBUG
+                printf("Case Push\n");
+                printf("\nint_arg = %d\n", int_arg);
+                #endif
+
+                int_arg = cpu->cs[cpu->programm_counter + 1];
+                cpu->programm_counter++;
+                StackPush(stk, logfile, int_arg);
+                break;
+            case POP:
+                #ifdef DEBUG
+                printf("Case Pop\n");
+                fprintf(logfile, "Case Pop\n");
+                #endif
+
+                StackPop(stk, logfile, &first_operand);
+                switch(int_arg){
+                    REG_ASSIGN(cpu, logfile, RAX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RBX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RCX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RDX, first_operand);
+                }
+                break;
+            case DIV:
+                #ifdef DEBUG
+                printf("Case DIV\n");
+                fprintf(logfile, "Case DIV\n");
+                #endif
+
+                StackPop(stk, logfile, &second_operand);
+                StackPop(stk, logfile, &first_operand);
+                if(!IsEqual(second_operand, EPS)){
+                    StackPush(stk, logfile, first_operand / second_operand);
+                }
+                else{
+                    printf("Dividing by zero!\n");
+                }
+                break;
+            case SUB:
+                #ifdef DEBUG
+                printf("Case SUB\n");
+                fprintf(logfile, "Case SUB\n");
+                #endif
+
+                StackPop(stk, logfile, &second_operand);
+                StackPop(stk, logfile, &first_operand);
+                StackPush(stk, logfile, first_operand - second_operand);
+                break;
+            case IN:
+                #ifdef DEBUG
+                printf("Case IN\n");
+                fprintf(logfile, "Case IN\n");
+                #endif
+
+                fscanf(stdin, "%lf", &first_operand);
+                StackPush(stk, logfile, first_operand);
+                break;
+            case MUL:
+                #ifdef DEBUG
+                printf("Case MUL\n");
+                fprintf(logfile, "Case MUL\n");
+                #endif
+
+                StackPop(stk, logfile, &first_operand);
+                StackPop(stk, logfile, &second_operand);
+                StackPush(stk, logfile, first_operand * second_operand);
+                break;
+            case OUT:
+                #ifdef DEBUG
+                printf("Case OUT\n");
+                fprintf(logfile, "Case OUT\n");
+                #endif
+
+                StackPop(stk, logfile, &first_operand);
+                fprintf(stdout, "\t\t\t\t[OUT]: %f\n", first_operand);
+                break;
+            case HLT:
+                #ifdef DEBUG
+                printf("Case HLT\n");
+                fprintf(logfile, "Case HLT\n");
+                #endif
+
+                fprintf(stdout, "HALT: exiting...\n");
+                return 0;
+        }
+    }
+
+    if(buff == nullptr) return 0;
 
     while(*buff){
         sscanf(buff, "%s%n", curr_command, &len);
