@@ -10,11 +10,13 @@
 
 #pragma once
 
+#define CPU_PC_SIZE 128
+
 struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
-    size_t programm_counter = 1;
-    int cs[128] = {};
+    size_t programm_counter = 0;
+    int cs[CPU_PC_SIZE] = {};
 };
 
 #define INIT_LEN 25
@@ -59,7 +61,7 @@ struct Processor{
 
 #ifdef DEBUG
 #define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                            \
-                fprintf(logfile, "Case" #COMMAND_NAME "\n");} while(0)                               \
+                fprintf(logfile, "Case" #COMMAND_NAME "\n");} while(0)
 #else
 #define SWITCH_ECHO(COMMAND_NAME) ;
 #endif

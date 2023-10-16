@@ -125,8 +125,8 @@ uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop){
     }
 
     fprintf(logfile, "Popping %f\n", stk->data[stk->size - 1]);
-    // fprintf(stdin, "%f", stk->data[stk->size - 1]); // ?
     *where_to_pop = stk->data[stk->size - 1];
+    fprintf(logfile, "STACK: stk->data[stk->size - 1] = %f\n", *where_to_pop);
     stk->data[stk->size - 1] = POISON;
     stk->size--;
 

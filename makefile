@@ -9,4 +9,4 @@ all:
 	-Wno-varargs -Wstack-protector -fcheck-new -fsized-deallocation -fstack-protector -fstrict-overflow 						\
 	-fno-omit-frame-pointer -Wlarger-than=8192 -Wframe-larger-than=8192 -fPIE													\
 	-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,				\
-	assembler.cpp assembler_funcs.cpp -o assembler
+	assembler.cpp ASM_funcs.cpp -o assembler

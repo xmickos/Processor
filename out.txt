@@ -1,0 +1,147 @@
+[StackCtor, line: 172]
+allocated 96 bytes of memory
+[StackDump, line: 140]
+size from file: 31
+
+Readed bin buff: 
+9
+4
+11
+6
+43
+1
+6
+43
+2
+6
+43
+3
+33
+2
+33
+2
+7
+1
+4
+33
+1
+33
+3
+7
+7
+3
+5
+-1
+2147483647
+0
+0
+int_command = 6, pc = 4
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+Case IN
+
+Scanned: 1.000000
+int_command = 43, pc = 5
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+Case Pop
+first_operand = 1.000000
+int_arg = 1
+[StackDump, line: 140]
+int_command = 6, pc = 7
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+Case IN
+
+Scanned: 5.000000
+int_command = 43, pc = 8
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+Case Pop
+first_operand = 5.000000
+int_arg = 2
+[StackDump, line: 140]
+int_command = 6, pc = 10
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+Case IN
+
+Scanned: 6.000000
+int_command = 43, pc = 11
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+Case Pop
+first_operand = 6.000000
+int_arg = 3
+[StackDump, line: 140]
+int_command = 33, pc = 13
+Case RPUSH.
+int_reg = 2
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+[StackDump, line: 140]
+int_command = 33, pc = 15
+Case RPUSH.
+int_reg = 2
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+[StackDump, line: 140]
+int_command = 7, pc = 17
+Case MUL
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+int_command = 1, pc = 18
+Case Push
+int_arg = 4
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+int_command = 33, pc = 20
+Case RPUSH.
+int_reg = 1
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+[StackDump, line: 140]
+int_command = 33, pc = 22
+Case RPUSH.
+int_reg = 3
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+[StackDump, line: 140]
+int_command = 7, pc = 24
+Case MUL
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+int_command = 7, pc = 25
+Case MUL
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+int_command = 3, pc = 26
+Case SUB
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+[StackPush, line: 210]
+[NeedToResize, line: 66]
+int_command = 5, pc = 27
+Case OUT
+[StackPop, line: 117]
+[NeedToResize, line: 66]
+				[OUT]: 1.000000
+int_command = -1, pc = 28
+Case HLT
+HALT: exiting...
+[StackDtor, line: 160]
+[StackDump, line: 140]

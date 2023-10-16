@@ -4,7 +4,8 @@ int main(){
     FILE *logfile = fopen("vm_logfile.txt", "w");
     FILE *input_file = fopen("assembler_output.txt", "r");
     FILE *bin_input = fopen("bin_assembler_output.bin", "rb");
-    char name[25] = "assembler_output.txt", bin_name[25] = "bin_assembler_output.bin", *buff = nullptr;
+    // char name[25] = "assembler_output.txt";
+    char bin_name[25] = "bin_assembler_output.bin", *buff = nullptr;
     int *bin_buff = nullptr;
     Processor cpu = {};
 

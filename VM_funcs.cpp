@@ -21,6 +21,21 @@ char* read_from_file(char* filename, FILE* logfile){
     return buff;
 }
 
+
+int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
+    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
+    CPU_VERIF(logfile == nullptr, "logfile is nullptr!");
+    CPU_VERIF(capacity == 0, "capacity is zero!");
+
+    StackCtor(&(cpu->stk), capacity, logfile);
+    cpu->RAX = 0;
+    cpu->RBX = 0;
+    cpu->RCX = 0;
+    cpu->RDX = 0;
+    return 0;
+}
+
+
 int* read_from_bin_file(char* filename, FILE* logfile){
     FILE* input_file = fopen(filename, "rb");
     struct stat filestat;
@@ -42,138 +57,6 @@ int* read_from_bin_file(char* filename, FILE* logfile){
     return buff;
 }
 
-int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
-    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
-    CPU_VERIF(logfile == nullptr, "logfile is nullptr!");
-    CPU_VERIF(capacity == 0, "capacity is zero!");
-
-    StackCtor(&(cpu->stk), capacity, logfile);
-    cpu->RAX = 0;
-    cpu->RBX = 0;
-    cpu->RCX = 0;
-    cpu->RDX = 0;
-    return 0;
-}
-
-int CpuDtor(Processor *cpu, FILE* logfile){
-    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
-    StackDtor(&(cpu->stk), logfile);
-    cpu->RAX = VM_POISON;
-    cpu->RBX = VM_POISON;
-    cpu->RCX = VM_POISON;
-    cpu->RDX = VM_POISON;
-    return 0;
-}
-
-uint32_t CpuVerificator(Processor *cpu, FILE* logfile){
-    // CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
-    if(cpu == nullptr){
-        fprintf(logfile, "[CPU Verificator] cpu is nullptr!\n");
-        return SINGLE_BIT(11);
-    }
-    GENERAL_VERIFICATION(&(cpu->stk), logfile);
-    return 0;
-}
-
-uint32_t CpuDump(Processor *cpu, FILE* logfile){
-    size_t space_counter = 0;
-    fprintf(logfile, "[CPU DUMP]\nRegisters:\n\tRAX = %f\n\tRBX = %f\n\tRCX = %f\n\tRDX = %f\nPC: %lu\n",
-    cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX, cpu->programm_counter);
-
-    fprintf(logfile, "Command segment dump:\n");
-    for(size_t i = 0; i < CPU_CS_SIZE && cpu->cs[i + 1] != HLT; i++){
-        fprintf(logfile, "%02d ", cpu->cs[i]);
-    }
-    fprintf(logfile, "\n");
-
-    space_counter = 3 * (cpu->programm_counter);
-    for(size_t i = 0; i < space_counter; i++){
-        fprintf(logfile, " ");
-    }
-    fprintf(logfile, "^\n");
-
-    return StackDump(&(cpu->stk), logfile);
-}
-
-
-
-void string_processing_disasm(char* buff, FILE* output, FILE* logfile){
-    bool silent_arg = false;
-    int int_command = VM_POISON, readed_len = VM_POISON;
-    char curr_command[INIT_LEN] = {}, output_str[INIT_LEN] = {}, curr_arg[INIT_LEN] = {};
-
-    while(*buff){
-        sscanf(buff, "%s%n", curr_command, &readed_len);
-        buff += readed_len;
-        printf("curr command: %s, strlen + 1 = %d\n", curr_command, readed_len + 1);
-
-        switch(*buff){
-            case ' ':
-                sscanf(buff, "%s%n", curr_arg, &readed_len);
-                buff += readed_len;
-                printf("case 1\n");
-                while(*buff != '\n') buff++;
-                buff++;
-                break;
-            case '\n':
-                *curr_arg = '\0';
-                silent_arg = true;
-                buff++;
-                printf("case 2\n");
-                break;
-            case '\0':
-                printf("case 3\n");
-                continue;
-            default:
-                while(*buff != '\n' && *buff != ' ') buff++;
-                buff++;
-        }
-        printf("curr_arg = %s\n", curr_arg);
-        int_command = atoi(curr_command);
-
-        COMMAND_COMPARE_DISASM("push", PUSH, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("push", RPUSH, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("div", DIV, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("sub", SUB, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("out", OUT, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("pop", POP, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("hlt", HLT, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("in" , IN, silent_arg, int_command, curr_command);
-        COMMAND_COMPARE_DISASM("mul", MUL, silent_arg, int_command, curr_command);
-
-        printf("\nreaded::%s, %s\n", curr_command, curr_arg);
-
-        if(silent_arg){
-            sprintf(output_str, "%s\n", curr_command);
-        }
-        else{
-            if(int_command == RPUSH || int_command == POP){
-                switch(atoi(curr_arg)){
-                    // [[fallthrough]];
-                    COPY_FR_REG(RAX, rax, curr_arg);
-                    COPY_FR_REG(RBX, rbx, curr_arg);
-                    COPY_FR_REG(RCX, rcx, curr_arg);
-                    COPY_FR_REG(RDX, rdx, curr_arg);
-                    default:
-                        fprintf(logfile, "Error: Unknown register code!\n");
-                        break;
-                }
-            }
-            sprintf(output_str, "%s %s\n", curr_command, curr_arg);
-        }
-        if(atoi(curr_command) == VM_POISON){
-            strcpy(output_str, "Unknown machine word.\n");
-        }
-
-        if(fputs(output_str, output)){
-            fprintf(logfile, "String written successfully! Silentness: %d\n", silent_arg);
-            fprintf(logfile, "Wroten string: %s\n", output_str);
-        }
-
-        fprintf(logfile, "newbuff::%s\n", buff);
-        silent_arg = false;
-    }
-}
 
 int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
@@ -444,5 +327,37 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
         CpuDump(cpu, logfile);
         cpu->programm_counter++;
     }
+    return 0;
+}
+
+
+uint32_t CpuDump(Processor *cpu, FILE* logfile){
+    size_t space_counter = 0;
+    fprintf(logfile, "[CPU DUMP]\nRegisters:\n\tRAX = %f\n\tRBX = %f\n\tRCX = %f\n\tRDX = %f\nPC: %lu\n",
+    cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX, cpu->programm_counter);
+
+    fprintf(logfile, "Command segment dump:\n");
+    for(size_t i = 0; i < CPU_CS_SIZE && cpu->cs[i + 1] != HLT; i++){
+        fprintf(logfile, "%02d ", cpu->cs[i]);
+    }
+    fprintf(logfile, "\n");
+
+    space_counter = 3 * (cpu->programm_counter);
+    for(size_t i = 0; i < space_counter; i++){
+        fprintf(logfile, " ");
+    }
+    fprintf(logfile, "^\n");
+
+    return StackDump(&(cpu->stk), logfile);
+}
+
+
+int CpuDtor(Processor *cpu, FILE* logfile){
+    CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
+    StackDtor(&(cpu->stk), logfile);
+    cpu->RAX = VM_POISON;
+    cpu->RBX = VM_POISON;
+    cpu->RCX = VM_POISON;
+    cpu->RDX = VM_POISON;
     return 0;
 }
