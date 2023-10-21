@@ -32,12 +32,21 @@ int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile
 }
 
 int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE* logfile){
+    #ifndef INTEGER_LOGIC
+    #ifndef CHAR_LOGIC
+    printf("\033[1;32mERROR\033[0m PLEASE DEFINE CHAR_LOGIC OR INTEGER_LOGIC. EXITING...\n");
+    exit(-1);
+    #endif
+    #endif
+
     size_t line_counter = 0, len = 0, binary_pos_counter = 0;
     int int_command = VM_POISON, int_arg = VM_POISON, *binary_code = nullptr;
     bool silent_arg = false;
     char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[2 * INIT_LEN] = {};
 
-    char final_processing_unit = (char)0;
+    unsigned char final_processing_unit = (char)0u, bit_command = (char)0;
+    char *char_binary_code = nullptr;
+
 
     // TODO: think whether to use char's instead of int's
 
@@ -51,12 +60,21 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
     fputs(version, output);
 
     binary_code = (int*)calloc(strlen(buff) + 4, sizeof(int)); //3 + 1 = 4 for CPU_VERSION NUM_OF_REGS VM_POISON NUM_OF_COMMANDS
+    char_binary_code = (char*)calloc(strlen(buff) + 4, sizeof(char));
 
     // TODO: think about buff size
-
+    #ifdef INTEGER_LOGIC
     binary_code[0] = CPU_VERSION;
     binary_code[1] = NUM_OF_REGS;
     binary_code[2] = NUM_OF_COMMANDS;
+    #endif
+
+    #ifdef CHAR_LOGIC
+    char_binary_code[0] = (char)CPU_VERSION;
+    char_binary_code[1] = (char)NUM_OF_REGS;
+    char_binary_code[2] = (char)NUM_OF_COMMANDS;
+    #endif
+
     binary_pos_counter += 3;
 
     while(buff[1]){
@@ -79,10 +97,22 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
         fprintf(logfile, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
 
         CHECKPOINT("first check");
-        COMMAND_COMPARE_ASM("push", RPUSH, curr_command, int_command);
-        COMMAND_COMPARE_ASM("pop", POP, curr_command, int_command);
+
+        #ifdef INTEGER_LOGIC
+        COMMAND_COMPARE_ASM("push", PUSH, curr_command, int_command);
+        COMMAND_COMPARE_ASM("pop", RPOP, curr_command, int_command);
         if(int_command != VM_POISON){
+        #endif
+
+        #ifdef CHAR_LOGIC
+        printf("curr command: %s\n", curr_command);
+        BITWISE_COMPARE_ASM("push", BPUSH, curr_command, final_processing_unit);
+        BITWISE_COMPARE_ASM("pop", BPOP, curr_command, final_processing_unit);
+        if((final_processing_unit & COMMAND_BITS) != 0u){
+        #endif
+
             CHECKPOINT("non-poison - case");
+
             if(silent_arg == true){
                 fprintf(logfile, "Error: Wrong command at %zu line.\n", line_counter + 1);
                 return -1;
@@ -91,23 +121,55 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
             int_arg = atoi(curr_arg);
 
             if(curr_arg[0] == 'r'){
+                fprintf(logfile, "curr arg: %s, register case.\n", curr_arg);
+                printf("curr arg: %s, register case.\n", curr_arg);
+
                 int_arg = VM_POISON;
+
+                #ifdef INTEGER_LOGIC
                 REGISTER_COMPARE_ASM("rax", RAX, curr_arg, int_arg);
                 REGISTER_COMPARE_ASM("rbx", RBX, curr_arg, int_arg);
                 REGISTER_COMPARE_ASM("rcx", RCX, curr_arg, int_arg);
                 REGISTER_COMPARE_ASM("rdx", RDX, curr_arg, int_arg);
-
                 if(int_arg == VM_POISON){
+
                     fprintf(logfile, "Error: Unknown argument at %zu line: %s\n", line_counter, curr_arg);
+                    printf("Error: Unknown argument at %zu line: %s\n", line_counter, curr_arg);
+
                     return -1;
                 }
-            }
+                #endif
 
-            CHECKPOINT("one sprintf");
+                #ifdef CHAR_LOGIC
+                BITWISE_COMPARE_ASM("rax", BRAX, curr_arg, final_processing_unit);
+                BITWISE_COMPARE_ASM("rbx", BRBX, curr_arg, final_processing_unit);
+                BITWISE_COMPARE_ASM("rcx", BRCX, curr_arg, final_processing_unit);
+                BITWISE_COMPARE_ASM("rdx", BRDX, curr_arg, final_processing_unit);
+                #endif
+
+                printf("final_processing_unit after regs is %d\n", final_processing_unit);
+                fprintf(logfile, "final_processing_unit after regs is %d\n", final_processing_unit);
+
+
+
+                final_processing_unit |= REGISTER_BIT;
+                char_binary_code[binary_pos_counter++] = final_processing_unit;
+
+                printf("final_processing_unit after regs and is %d\n", final_processing_unit);
+                fprintf(logfile, "final_processing_unit after regs and is %d\n", final_processing_unit);
+
+            }
+            #ifdef INTEGER_LOGIC
             sprintf(output_str, "%d %d\n", int_command, int_arg);
             binary_code[binary_pos_counter++] = int_command;
-        }else{
+            #endif
+
+            }else{
             CHECKPOINT("after regs");
+            printf("FPU after regs: %d\n", final_processing_unit);
+            fprintf(logfile, "FPU after regs: %d\n", final_processing_unit);
+
+            #ifdef INTEGER_LOGIC
             COMMAND_COMPARE_ASM("div", DIV, curr_command, int_command);
             COMMAND_COMPARE_ASM("sub", SUB, curr_command, int_command);
             COMMAND_COMPARE_ASM("out", OUT, curr_command, int_command);
@@ -118,6 +180,25 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
             sprintf(output_str, "%d\n", int_command);
             binary_code[binary_pos_counter++] = int_command;
             binary_code[binary_pos_counter++] = int_arg;
+            #endif
+
+            #ifdef CHAR_LOGIC
+
+            BITWISE_COMPARE_ASM("div", BDIV, curr_command, final_processing_unit);
+            BITWISE_COMPARE_ASM("sub", BSUB, curr_command, final_processing_unit);
+            BITWISE_COMPARE_ASM("out", BOUT, curr_command, final_processing_unit);
+            BITWISE_COMPARE_ASM("hlt", BHLT, curr_command, final_processing_unit);
+            BITWISE_COMPARE_ASM("in",  BIN,  curr_command, final_processing_unit);
+            BITWISE_COMPARE_ASM("mul", BMUL, curr_command, final_processing_unit);
+
+            char_binary_code[binary_pos_counter++] = final_processing_unit;
+
+            printf("FPU after all: %d\n", final_processing_unit);
+            fprintf(logfile, "FPU after all: %d\n", final_processing_unit);
+
+            #endif
+
+            CHECKPOINT("one sprintf");
         }
 
         if(fputs(output_str, output)){
@@ -128,6 +209,7 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
         if(!silent_arg){
             SKIP_STR();
         }
+
         fprintf(logfile, "newbuff::%s\n", buff);
         silent_arg = false;
 
@@ -135,13 +217,21 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
         int_command = VM_POISON;
         int_arg = VM_POISON;
     }
-
+    #ifdef INTEGER_LOGIC
     binary_code[binary_pos_counter++] = VM_POISON;
-
     if(fwrite(binary_code, sizeof(int), binary_pos_counter + 2, bin_output) < binary_pos_counter){
         printf("fwrite failed!\n");
         return -1;
     }
+    #endif
+
+    #ifdef CHAR_LOGIC
+    if(fwrite(char_binary_code, sizeof(char), binary_pos_counter + 2, bin_output) < binary_pos_counter){
+        printf("fwrite failed!\n");
+        return -1;
+    }
+    #endif
+
 
     #ifdef DEBUG
     printf("Binary code array:\n");
@@ -153,7 +243,8 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
         printf("%d ", binary_code[i]);
     }
     #endif
-
+    free(binary_code);
+    free(char_binary_code);
     return 0;
 }
 

@@ -18,7 +18,7 @@ out
 hlt
 
 
-command: in, strlen = 2, buff::
+command: in, buff::
 pop rax
 in
 pop rbx
@@ -38,9 +38,11 @@ hlt
 
 Failed to read argument!
 curr_command = in, curr_arg = , Silentness = 1
-String written successfully!
-Written string: 6 -2
-
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 6
+Checkpoint one sprintf
 newbuff::
 pop rax
 in
@@ -60,7 +62,7 @@ out
 hlt
 
 
-command: pop, strlen = 3, buff:: rax
+command: pop, buff:: rax
 in
 pop rbx
 in
@@ -78,9 +80,11 @@ out
 hlt
 
 curr_command = pop, curr_arg = rax, Silentness = 0
-String written successfully!
-Written string: 43 1
-
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+final_processing_unit after regs is 4
+final_processing_unit after regs and is 132
 newbuff::in
 pop rbx
 in
@@ -98,7 +102,7 @@ out
 hlt
 
 
-command: in, strlen = 2, buff::
+command: in, buff::
 pop rbx
 in
 pop rcx
@@ -116,4 +120,357 @@ hlt
 
 Failed to read argument!
 curr_command = in, curr_arg = rax, Silentness = 1
-Error: Wrong command at 2 line.
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 6
+Checkpoint one sprintf
+newbuff::
+pop rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: pop, buff:: rbx
+in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = pop, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+final_processing_unit after regs is 36
+final_processing_unit after regs and is 164
+newbuff::in
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: in, buff::
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+Failed to read argument!
+curr_command = in, curr_arg = rbx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 6
+Checkpoint one sprintf
+newbuff::
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: pop, buff:: rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = pop, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+final_processing_unit after regs is 68
+final_processing_unit after regs and is 196
+newbuff::push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, buff:: rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+final_processing_unit after regs is 33
+final_processing_unit after regs and is 161
+newbuff::push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, buff:: rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+final_processing_unit after regs is 33
+final_processing_unit after regs and is 161
+newbuff::mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: mul, buff::
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+Failed to read argument!
+curr_command = mul, curr_arg = rbx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint one sprintf
+newbuff::
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, buff:: 4
+push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = 4, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+newbuff::push rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, buff:: rax
+push rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+final_processing_unit after regs is 1
+final_processing_unit after regs and is 129
+newbuff::push rcx
+mul
+mul
+sub
+out
+hlt
+
+
+command: push, buff:: rcx
+mul
+mul
+sub
+out
+hlt
+
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+final_processing_unit after regs is 65
+final_processing_unit after regs and is 193
+newbuff::mul
+mul
+sub
+out
+hlt
+
+
+command: mul, buff::
+mul
+sub
+out
+hlt
+
+Failed to read argument!
+curr_command = mul, curr_arg = rcx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint one sprintf
+newbuff::
+mul
+sub
+out
+hlt
+
+
+command: mul, buff::
+sub
+out
+hlt
+
+Failed to read argument!
+curr_command = mul, curr_arg = rcx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint one sprintf
+newbuff::
+sub
+out
+hlt
+
+
+command: sub, buff::
+out
+hlt
+
+Failed to read argument!
+curr_command = sub, curr_arg = rcx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 3
+Checkpoint one sprintf
+newbuff::
+out
+hlt
+
+
+command: out, buff::
+hlt
+
+Failed to read argument!
+curr_command = out, curr_arg = rcx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 5
+Checkpoint one sprintf
+newbuff::
+hlt
+
+
+command: hlt, buff::
+
+Failed to read argument!
+curr_command = hlt, curr_arg = rcx, Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 255
+Checkpoint one sprintf
+newbuff::
+
