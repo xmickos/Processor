@@ -1,4 +1,4 @@
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 0,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
@@ -13,32 +13,33 @@ stk->capacity: 10.
 	stk->data[8] = POISON
 	stk->data[9] = POISON
 	stk->data[10] = SECOND_CANARY
+fread readed less than size!
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 1.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 Case IN
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 1.000000
-STACK: stk->data[stk->size - 1] = 1.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 Case Pop
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
+	RAX = 2.000000
 	RBX = 0.000000
 	RCX = 0.000000
 	RDX = 0.000000
 PC: 6
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                   ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 0,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
@@ -57,28 +58,28 @@ stk->capacity: 10.
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 5.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 Case IN
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 5.000000
-STACK: stk->data[stk->size - 1] = 5.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 Case Pop
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
+	RAX = 2.000000
+	RBX = 2.000000
 	RCX = 0.000000
 	RDX = 0.000000
 PC: 9
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                            ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 0,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
@@ -97,28 +98,28 @@ stk->capacity: 10.
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 65.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 Case IN
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 65.000000
-STACK: stk->data[stk->size - 1] = 65.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 Case Pop
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
-	RCX = 65.000000
+	RAX = 2.000000
+	RBX = 2.000000
+	RCX = 2.000000
 	RDX = 0.000000
 PC: 12
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                                     ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 0,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
@@ -139,22 +140,22 @@ int_reg = 2
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 5.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
-	RCX = 65.000000
+	RAX = 2.000000
+	RBX = 2.000000
+	RCX = 2.000000
 	RDX = 0.000000
 PC: 14
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                                           ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 1,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
-	stk->data[0] = 5.000000
+	stk->data[0] = 2.000000
 	stk->data[1] = POISON
 	stk->data[2] = POISON
 	stk->data[3] = POISON
@@ -171,23 +172,23 @@ int_reg = 2
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 5.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
-	RCX = 65.000000
+	RAX = 2.000000
+	RBX = 2.000000
+	RCX = 2.000000
 	RDX = 0.000000
 PC: 16
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                                                 ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 2,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
-	stk->data[0] = 5.000000
-	stk->data[1] = 5.000000
+	stk->data[0] = 2.000000
+	stk->data[1] = 2.000000
 	stk->data[2] = POISON
 	stk->data[3] = POISON
 	stk->data[4] = POISON
@@ -202,54 +203,54 @@ Case MUL
 
 [Verificator, line: 107]No errors found!
 
-Popping 5.000000
-STACK: stk->data[stk->size - 1] = 5.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 5.000000
-STACK: stk->data[stk->size - 1] = 5.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 25.000000 successfully!
+[StackPush, line: 222] Pushed 4.000000 successfully!
 Case Push
 int_arg = 4
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 4.000000 successfully!
+[StackPush, line: 222] Pushed 4.000000 successfully!
 Case RPUSH.
 int_reg = 1
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 1.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
-	RCX = 65.000000
+	RAX = 2.000000
+	RBX = 2.000000
+	RCX = 2.000000
 	RDX = 0.000000
 PC: 21
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                                                                ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 3,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
-	stk->data[0] = 25.000000
+	stk->data[0] = 4.000000
 	stk->data[1] = 4.000000
-	stk->data[2] = 1.000000
+	stk->data[2] = 2.000000
 	stk->data[3] = POISON
 	stk->data[4] = POISON
 	stk->data[5] = POISON
@@ -264,25 +265,25 @@ int_reg = 3
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 65.000000 successfully!
+[StackPush, line: 222] Pushed 2.000000 successfully!
 [CPU DUMP]
 Registers:
-	RAX = 1.000000
-	RBX = 5.000000
-	RCX = 65.000000
+	RAX = 2.000000
+	RBX = 2.000000
+	RCX = 2.000000
 	RDX = 0.000000
 PC: 23
 Command segment dump:
-09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 
+09 04 11 06 43 01 06 43 02 06 43 03 33 02 33 02 07 01 04 33 01 33 03 07 07 03 05 
                                                                      ^
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 4,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY
-	stk->data[0] = 25.000000
+	stk->data[0] = 4.000000
 	stk->data[1] = 4.000000
-	stk->data[2] = 1.000000
-	stk->data[3] = 65.000000
+	stk->data[2] = 2.000000
+	stk->data[3] = 2.000000
 	stk->data[4] = POISON
 	stk->data[5] = POISON
 	stk->data[6] = POISON
@@ -295,31 +296,31 @@ Case MUL
 
 [Verificator, line: 107]No errors found!
 
-Popping 65.000000
-STACK: stk->data[stk->size - 1] = 65.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 1.000000
-STACK: stk->data[stk->size - 1] = 1.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 2.000000
+STACK: stk->data[stk->size - 1] = 2.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 65.000000 successfully!
+[StackPush, line: 222] Pushed 4.000000 successfully!
 Case MUL
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 65.000000
-STACK: stk->data[stk->size - 1] = 65.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 4.000000
+STACK: stk->data[stk->size - 1] = 4.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
@@ -327,48 +328,48 @@ STACK: stk->data[stk->size - 1] = 65.000000
 
 Popping 4.000000
 STACK: stk->data[stk->size - 1] = 4.000000
-[StackPop, line: 133]Popped succesfully!
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed 260.000000 successfully!
+[StackPush, line: 222] Pushed 16.000000 successfully!
 Case SUB
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 260.000000
-STACK: stk->data[stk->size - 1] = 260.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 16.000000
+STACK: stk->data[stk->size - 1] = 16.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping 25.000000
-STACK: stk->data[stk->size - 1] = 25.000000
-[StackPop, line: 133]Popped succesfully!
+Popping 4.000000
+STACK: stk->data[stk->size - 1] = 4.000000
+[StackPop, line: 136]Popped succesfully!
 
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-[StackPush, line: 219] Pushed -235.000000 successfully!
+[StackPush, line: 222] Pushed -12.000000 successfully!
 Case OUT
 [Verificator, line: 107]No errors found!
 
 [Verificator, line: 107]No errors found!
 
-Popping -235.000000
-STACK: stk->data[stk->size - 1] = -235.000000
-[StackPop, line: 133]Popped succesfully!
+Popping -12.000000
+STACK: stk->data[stk->size - 1] = -12.000000
+[StackPop, line: 136]Popped succesfully!
 
 Case HLT
 [Verificator, line: 107]No errors found!
 
-[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 146]
+[DUMP][file: ./stack_funcs.cpp, func: StackDump, line: 149]
 stk->size: 0,
 stk->capacity: 10.
 	stk->data[18446744073709551615] = FIRST_CANARY

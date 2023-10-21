@@ -1,10 +1,15 @@
 #include "main_header.hpp"
 
-int main(){
+int main(const int argc, const char** argv){
+    if(argv[1] == nullptr){
+        printf("Bad commandline argument.\n");
+        return 0;
+    }
+
     FILE *logfile = fopen("assembler_logfile.txt", "w");
     FILE *output = fopen("assembler_output.bin", "wb");
     FILE *bin_output = fopen("bin_assembler_output.bin", "wb");
-    char name[25] = "user_input.txt";
+    const char *name = argv[1];
     char *buff = nullptr;
 
     buff = read_from_file(name, logfile);

@@ -117,8 +117,11 @@ uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop){
     GENERAL_VERIFICATION(stk, logfile);
     if(where_to_pop == nullptr){
         printf("Bad fix, exiting.\n");
-        exit(-1);
+        // TODO: do not exit!!!!!!!!!!!
+        return -1;
     }
+
+    // TODO: return any error pls
 
     if(NeedToResize(stk, 0, logfile) == RESIZE_YES){
         StackResize(stk, logfile, 0);

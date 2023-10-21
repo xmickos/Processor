@@ -68,30 +68,31 @@ struct Processor{
 
 
 enum FUNC_CODES{
-    PUSH = (1),
-    RPUSH= (33),
-    DIV  = (2),
-    SUB  = (3),
-    POP  = (43),
-    OUT  = (5),
-    IN   = (6),
-    MUL  = (7),
-    ADD  = (9),
-    SQRT = (8),
-    HLT  = (-1),
-    RAX  = (1),
-    RBX  = (2),
-    RCX  = (3),
-    RDX  = (4),
+    PUSH  = (1),
+    RPUSH = (33),
+    DIV   = (2),
+    SUB   = (3),
+    POP   = (43),
+    OUT   = (5),
+    IN    = (6),
+    MUL   = (7),
+    ADD   = (9),
+    SQRT  = (8),
+    HLT   = (-1),
+    RAX   = (1),
+    RBX   = (2),
+    RCX   = (3),
+    RDX   = (4),
     CPU_VERSION = (9),
     NUM_OF_REGS = (4),
     NUM_OF_COMMANDS = (11),
-    CPU_CS_SIZE = (128)
+    CPU_CS_SIZE = (128),
+    CPU_INIT_CAP = (10)
 };
 
-char* read_from_file(char* filename, FILE* logfile);
+char* read_from_file(const char* filename, FILE* logfile);
 
-void string_processing_asm(char* buff, FILE* output, FILE* bin_output, FILE* logfile);
+int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE* logfile);
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 
@@ -105,4 +106,4 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile);
 
 int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile);
 
-int* read_from_bin_file(char* filename, FILE* logfile);
+int* read_from_bin_file(const char* filename, FILE* logfile);

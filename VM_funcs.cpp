@@ -1,6 +1,8 @@
 #include "main_header.hpp"
 #include "stack_funcs.cpp"
 
+
+#ifdef NO_BINARY_READ
 char* read_from_file(char* filename, FILE* logfile){
     FILE* input_file = fopen(filename, "r");
     struct stat filestat;
@@ -20,6 +22,7 @@ char* read_from_file(char* filename, FILE* logfile){
     fclose(input_file);
     return buff;
 }
+#endif
 
 
 int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
@@ -27,7 +30,10 @@ int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
     CPU_VERIF(logfile == nullptr, "logfile is nullptr!");
     CPU_VERIF(capacity == 0, "capacity is zero!");
 
-    StackCtor(&(cpu->stk), capacity, logfile);
+    if(StackCtor(&(cpu->stk), capacity, logfile) != 0){
+        fprintf(logfile, "[CPU Verificator] StackCtor error! \n");
+        return -1;
+    }
     cpu->RAX = 0;
     cpu->RBX = 0;
     cpu->RCX = 0;
@@ -36,32 +42,36 @@ int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
 }
 
 
-int* read_from_bin_file(char* filename, FILE* logfile){
+#ifndef NO_BINARY_READ
+int* read_from_bin_file(const char* filename, FILE* logfile){
     FILE* input_file = fopen(filename, "rb");
     struct stat filestat;
     size_t size = 0;
 
     stat(filename, &filestat);
-    size = (size_t)filestat.st_size / 4;
+    size = (size_t)filestat.st_size + sizeof(int);
     printf("size from file: %lu\n", size);
 
-    int *buff = (int*)calloc(size + 1, sizeof(int));
+    int *buff = (int*)calloc(size, sizeof(char));
 
-    if(fread(buff, sizeof(int), size + 1, input_file) < size){
+    if(fread(buff, sizeof(char), size + 1, input_file) < size){
         fprintf(logfile, "fread readed less than size!\n");
     }
+    // TODO: think whether to use char's instead of int's
 
-    buff[size] = VM_POISON;
+    // imm/reg  reg num   opcode
+    //    0        00     00000
+
+    buff[size / sizeof(int) - 1] = VM_POISON;
 
     fclose(input_file);
     return buff;
 }
+#endif
 
 
 int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
-    size_t len = 0;
-    char curr_command[INIT_LEN], curr_arg[INIT_LEN];
     int int_command = 0, int_arg = VM_POISON, int_reg = VM_POISON;
     Stack* stk = &(cpu->stk);
 
@@ -71,14 +81,14 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
     }
     cpu->programm_counter += 3; // 3 for cpu version, num of regs and num of commands;
 
-    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[1] != VM_POISON; i++){
+    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[0] != VM_POISON; i++){
         cpu->cs[i] = *bin_buff;
         bin_buff++;
     }
 
     for(;cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != VM_POISON;){
         int_command = cpu->cs[cpu->programm_counter++];
-        printf("int_command = %d, pc = %d\n", int_command, cpu->programm_counter);
+        printf("int_command = %d, pc = %zu\n", int_command, cpu->programm_counter);
 
         switch(int_command){
             case RPUSH:
@@ -98,7 +108,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
                     PUSH_FR_REG(stk, logfile, RDX);
                 }
                 CpuDump(cpu, logfile);
-                continue;
+                break;
             case PUSH:
                 int_arg = cpu->cs[cpu->programm_counter++];
 
@@ -135,7 +145,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
                 printf("\033[1;32mCase DIV\033[0m\n");
                 fprintf(logfile, "Case DIV\n");
                 #endif
-
+                 // TODO: check errors
                 StackPop(stk, logfile, &second_operand);
                 StackPop(stk, logfile, &first_operand);
                 if(!IsEqual(second_operand, EPS)){
@@ -143,6 +153,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
                 }
                 else{
                     printf("Dividing by zero!\n");
+                    // TODO: return JOJO;
                 }
                 break;
             case SUB:
@@ -196,7 +207,10 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
         }
     }
 
-    if(buff == nullptr) return 0;
+
+    #ifdef NO_BINARY_READ
+    size_t len = 0;
+    char curr_command[INIT_LEN], curr_arg[INIT_LEN];
 
     while(*buff){
         sscanf(buff, "%s%n", curr_command, &len);
@@ -327,6 +341,8 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
         CpuDump(cpu, logfile);
         cpu->programm_counter++;
     }
+    #endif
+
     return 0;
 }
 
@@ -337,7 +353,8 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile){
     cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX, cpu->programm_counter);
 
     fprintf(logfile, "Command segment dump:\n");
-    for(size_t i = 0; i < CPU_CS_SIZE && cpu->cs[i + 1] != HLT; i++){
+    for(size_t i = 0; i + 1 < CPU_CS_SIZE && cpu->cs[i] != HLT; i++){
+        printf("i: %zu, cs: %d\n", i, cpu->cs[i]);
         fprintf(logfile, "%02d ", cpu->cs[i]);
     }
     fprintf(logfile, "\n");
@@ -355,6 +372,11 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile){
 int CpuDtor(Processor *cpu, FILE* logfile){
     CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
     StackDtor(&(cpu->stk), logfile);
+
+    for(size_t i = 0; i < CPU_CS_SIZE; i++){
+        cpu->cs[i] = VM_POISON;
+    }
+
     cpu->RAX = VM_POISON;
     cpu->RBX = VM_POISON;
     cpu->RCX = VM_POISON;
