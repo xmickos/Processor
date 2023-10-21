@@ -1,24 +1,34 @@
 #include "main_header.hpp"
 #include "stack_funcs.cpp"
 
-char* read_from_file(const char* filename, FILE* logfile){
+int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile){
     FILE* input_file = fopen(filename, "r");
     struct stat filestat;
-    size_t size = 0;
 
     stat(filename, &filestat);
-    size = (size_t)filestat.st_size;
+    FileStruct->filesize = (size_t)filestat.st_size;
 
-    char *buff = (char*)calloc(size + 1, sizeof(char));
+    FileStruct->buff = (char*)calloc(FileStruct->filesize + 1, sizeof(char));
+    if(FileStruct->buff == nullptr){
+        printf("Bad calloc!\n");
+        return -1;
+    }
 
-    if(fread(buff, 1, size + 1, input_file) < size){
+
+    if(fread(FileStruct->buff, sizeof(char), FileStruct->filesize, input_file) < FileStruct->filesize){
         fprintf(logfile, "fread readed less than size!\n");
+        return -1;
     }
     fclose(input_file);
 
-    buff[size] = '\0';
+    for(size_t i = 0; i < FileStruct->filesize; i++){
+        if(FileStruct->buff[i] == '\n' || FileStruct->buff[i] == '0') FileStruct->num_of_str++;
+    }
+    printf("Filesize: %lu, num of strings: %lu \n", FileStruct->filesize, FileStruct->num_of_str);
 
-    return buff;
+    FileStruct->buff[FileStruct->filesize] = '\0';
+
+    return 0;
 }
 
 int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE* logfile){
@@ -26,6 +36,14 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
     int int_command = VM_POISON, int_arg = VM_POISON, *binary_code = nullptr;
     bool silent_arg = false;
     char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[2 * INIT_LEN] = {};
+
+    char final_processing_unit = (char)0;
+
+    // TODO: think whether to use char's instead of int's
+
+    // imm/reg  reg num   opcode
+    //    0        00     00000
+
 
     fprintf(logfile, "Initial buff::\n%s\n", buff);
 
@@ -42,13 +60,16 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
     binary_pos_counter += 3;
 
     while(buff[1]){
+        final_processing_unit = (char)0;
+
         if(!isalpha(*buff)) SKIP_STR();
 
-        if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 = STRINGIFY(INIT_LEN - 1)
+        if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
             fprintf(logfile, "Failed to read command!\n");
         }
+
         buff += len;
-        fprintf(logfile, "\ncommand: %s, strlen = %zu, buff::%s\n", curr_command, strlen(curr_command), buff);
+        fprintf(logfile, "\ncommand: %s, buff::%s\n", curr_command, buff);
 
         if(*buff == '\n' || sscanf(buff, "%s", curr_arg) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
@@ -57,14 +78,13 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
 
         fprintf(logfile, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
 
-
+        CHECKPOINT("first check");
         COMMAND_COMPARE_ASM("push", RPUSH, curr_command, int_command);
         COMMAND_COMPARE_ASM("pop", POP, curr_command, int_command);
-        COMMAND_COMPARE_ASM("push", PUSH, curr_command, int_command);
         if(int_command != VM_POISON){
-
+            CHECKPOINT("non-poison - case");
             if(silent_arg == true){
-                fprintf(logfile, "Error: Wrong command at %zu line.\n", line_counter);
+                fprintf(logfile, "Error: Wrong command at %zu line.\n", line_counter + 1);
                 return -1;
             }
 
@@ -82,18 +102,23 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
                     return -1;
                 }
             }
+
+            CHECKPOINT("one sprintf");
+            sprintf(output_str, "%d %d\n", int_command, int_arg);
+            binary_code[binary_pos_counter++] = int_command;
+        }else{
+            CHECKPOINT("after regs");
+            COMMAND_COMPARE_ASM("div", DIV, curr_command, int_command);
+            COMMAND_COMPARE_ASM("sub", SUB, curr_command, int_command);
+            COMMAND_COMPARE_ASM("out", OUT, curr_command, int_command);
+            COMMAND_COMPARE_ASM("hlt", HLT, curr_command, int_command);
+            COMMAND_COMPARE_ASM("in",  IN, curr_command, int_command);
+            COMMAND_COMPARE_ASM("mul", MUL, curr_command, int_command);
+
+            sprintf(output_str, "%d\n", int_command);
+            binary_code[binary_pos_counter++] = int_command;
+            binary_code[binary_pos_counter++] = int_arg;
         }
-
-        COMMAND_COMPARE_ASM("div", DIV, curr_command, int_command);
-        COMMAND_COMPARE_ASM("sub", SUB, curr_command, int_command);
-        COMMAND_COMPARE_ASM("out", OUT, curr_command, int_command);
-        COMMAND_COMPARE_ASM("hlt", HLT, curr_command, int_command);
-        COMMAND_COMPARE_ASM("in",  IN, curr_command, int_command);
-        COMMAND_COMPARE_ASM("mul", MUL, curr_command, int_command);
-
-        sprintf(output_str, "%d %d\n", int_command, int_arg);
-        binary_code[binary_pos_counter++] = int_command;
-        binary_code[binary_pos_counter++] = int_arg;
 
         if(fputs(output_str, output)){
             fprintf(logfile, "String written successfully!\n");
@@ -107,11 +132,16 @@ int string_processing_asm(const char* buff, FILE* output, FILE* bin_output, FILE
         silent_arg = false;
 
         line_counter++;
+        int_command = VM_POISON;
+        int_arg = VM_POISON;
     }
 
     binary_code[binary_pos_counter++] = VM_POISON;
 
-    fwrite(binary_code, sizeof(int), binary_pos_counter + 2, bin_output);
+    if(fwrite(binary_code, sizeof(int), binary_pos_counter + 2, bin_output) < binary_pos_counter){
+        printf("fwrite failed!\n");
+        return -1;
+    }
 
     #ifdef DEBUG
     printf("Binary code array:\n");
