@@ -43,26 +43,22 @@ int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
 
 
 #ifndef NO_BINARY_READ
-int* read_from_bin_file(const char* filename, FILE* logfile){
+
+unsigned char* read_from_bin_file(const char* filename, FILE* logfile){
     FILE* input_file = fopen(filename, "rb");
     struct stat filestat;
     size_t size = 0;
 
     stat(filename, &filestat);
-    size = (size_t)filestat.st_size + sizeof(int);
+    size = (size_t)filestat.st_size;
     printf("size from file: %lu\n", size);
 
-    int *buff = (int*)calloc(size, sizeof(char));
-
-    if(fread(buff, sizeof(char), size + 1, input_file) < size){
+    unsigned char *buff = (unsigned char*)calloc(size + 1, sizeof(char));
+    if(fread(buff, sizeof(char), size, input_file) < size){
         fprintf(logfile, "fread readed less than size!\n");
     }
-    // TODO: think whether to use char's instead of int's
 
-    // imm/reg  reg num   opcode
-    //    0        00     00000
-
-    buff[size / sizeof(int) - 1] = VM_POISON;
+    buff[size] |= COMMAND_BITS;
 
     fclose(input_file);
     return buff;
@@ -70,9 +66,10 @@ int* read_from_bin_file(const char* filename, FILE* logfile){
 #endif
 
 
-int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff){
+int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
     int int_command = 0, int_arg = VM_POISON, int_reg = VM_POISON;
+    unsigned char char_command = (char)0, char_reg = (char)0;
     Stack* stk = &(cpu->stk);
 
     if(bin_buff[0] != CPU_VERSION || bin_buff[1] != NUM_OF_REGS || bin_buff[2] != NUM_OF_COMMANDS){
@@ -81,122 +78,151 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const int* bin_buff)
     }
     cpu->programm_counter += 3; // 3 for cpu version, num of regs and num of commands;
 
-    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[0] != VM_POISON; i++){
+    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[0] != BHLT; i++){
         cpu->cs[i] = *bin_buff;
         bin_buff++;
     }
 
-    for(;cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != VM_POISON;){
-        int_command = cpu->cs[cpu->programm_counter++];
-        printf("int_command = %d, pc = %zu\n", int_command, cpu->programm_counter);
+    for(;cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != COMMAND_BITS;){
+        char_command = cpu->cs[cpu->programm_counter++];
+        printf("char_command = %d, pc = %zu\n", char_command, cpu->programm_counter);
+        if(char_command == 0) break; // must be removed in future ...
 
-        switch(int_command){
-            case RPUSH:
-                int_reg = cpu->cs[cpu->programm_counter++];
+        switch(char_command & COMMAND_BITS){
+            case BPUSH:
+                if((char_command & IMREG_BIT) == 0){
+                    int_arg = 0;
+                    char_reg = cpu->cs[cpu->programm_counter++];
+                    int_arg |= char_reg << 24;
+                    char_reg = cpu->cs[cpu->programm_counter++];
+                    int_arg |= char_reg << 16;
+                    char_reg = cpu->cs[cpu->programm_counter++];
+                    int_arg |= char_reg << 8;
+                    char_reg = cpu->cs[cpu->programm_counter++];
+                    int_arg |= char_reg;
 
-                #ifdef DEBUG
-                printf("\033[1;32mCase RPUSH.\033[0m\n");
-                fprintf(logfile, "Case RPUSH.\n");
-                fprintf(logfile, "int_reg = %d\n", int_reg);
-                printf("int_reg = %d\n", int_reg);
-                #endif
 
-                switch(int_reg){
-                    PUSH_FR_REG(stk, logfile, RAX);
-                    PUSH_FR_REG(stk, logfile, RBX);
-                    PUSH_FR_REG(stk, logfile, RCX);
-                    PUSH_FR_REG(stk, logfile, RDX);
+                    #ifdef DEBUG
+                    printf("\033[1;32mCase Push\033[0m\n");
+                    printf("int_arg = %d\n", int_arg);
+                    fprintf(logfile, "Case Push\n");
+                    fprintf(logfile, "int_arg = %d\n", int_arg);
+                    #endif
+
+                    StackPush(stk, logfile, int_arg);
+                    break;
+                }else{
+
+                    #ifdef DEBUG
+                    printf("\033[1;32mCase PUSH.\033[0m\n");
+                    fprintf(logfile, "Case PUSH.\n");
+                    fprintf(logfile, "char_reg = %d\n", char_reg);
+                    printf("char_reg = %d\n", char_reg);
+                    #endif
+
+                    switch((char_command & REGISTER_BITS)){
+                        PUSH_FR_REG(stk, logfile, RAX, BRAX);
+                        PUSH_FR_REG(stk, logfile, RBX, BRBX);
+                        PUSH_FR_REG(stk, logfile, RCX, BRCX);
+                        PUSH_FR_REG(stk, logfile, RDX, BRDX);
+                    }
+
+                    CpuDump(cpu, logfile);
+                    break;
                 }
-                CpuDump(cpu, logfile);
-                break;
-            case PUSH:
-                int_arg = cpu->cs[cpu->programm_counter++];
-
-                #ifdef DEBUG
-                printf("\033[1;32mCase Push\033[0m\n");
-                printf("int_arg = %d\n", int_arg);
-                fprintf(logfile, "Case Push\n");
-                fprintf(logfile, "int_arg = %d\n", int_arg);
-                #endif
-
-                StackPush(stk, logfile, int_arg);
-                break;
-            case POP:
-                int_arg = cpu->cs[cpu->programm_counter++];
-                StackPop(stk, logfile, &first_operand);
-
+            case BPOP:
                 #ifdef DEBUG
                 printf("\033[1;32mCase Pop.\033[0m\n");
                 fprintf(logfile, "Case Pop\n");
-                printf("first_operand = %f\n", first_operand);
+                printf("first_operand = %f, char_command: %d\n", first_operand, (char_command & REGISTER_BITS) >> 5);
                 printf("int_arg = %d\n", int_arg);
                 #endif
 
-                switch(int_arg){
-                    REG_ASSIGN(cpu, logfile, RAX, first_operand);
-                    REG_ASSIGN(cpu, logfile, RBX, first_operand);
-                    REG_ASSIGN(cpu, logfile, RCX, first_operand);
-                    REG_ASSIGN(cpu, logfile, RDX, first_operand);
+                StackPop(stk, logfile, &first_operand);
+
+                switch((char_command & REGISTER_BITS)){
+                    REG_ASSIGN(cpu, logfile, RAX, BRAX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RBX, BRBX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RCX, BRCX, first_operand);
+                    REG_ASSIGN(cpu, logfile, RDX, BRDX, first_operand);
                 }
+                printf("\033[1;34mREGS\033[0m: %f %f %f %f\n", cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX);
                 CpuDump(cpu, logfile);
                 break;
-            case DIV:
+            case BDIV:
                 #ifdef DEBUG
                 printf("\033[1;32mCase DIV\033[0m\n");
                 fprintf(logfile, "Case DIV\n");
                 #endif
-                 // TODO: check errors
-                StackPop(stk, logfile, &second_operand);
-                StackPop(stk, logfile, &first_operand);
+
+                if(StackPop(stk, logfile, &second_operand)){
+                    printf("Bad second pop!\n");
+                }
+                if(StackPop(stk, logfile, &first_operand)){
+                    printf("Bad first pop!\n");
+                }
+
                 if(!IsEqual(second_operand, EPS)){
                     StackPush(stk, logfile, first_operand / second_operand);
                 }
                 else{
                     printf("Dividing by zero!\n");
-                    // TODO: return JOJO;
+                    fprintf(logfile, "Dividing by zero!\n");
+                    return -1;
                 }
                 break;
-            case SUB:
+            case BSUB:
                 #ifdef DEBUG
                 printf("\033[1;32mCase SUB.\033[0m\n");
                 fprintf(logfile, "Case SUB\n");
                 #endif
 
-                StackPop(stk, logfile, &second_operand);
-                StackPop(stk, logfile, &first_operand);
+                if(StackPop(stk, logfile, &second_operand)){
+                    printf("Bad second pop!\n");
+                }
+                if(StackPop(stk, logfile, &first_operand)){
+                    printf("Bad first pop!\n");
+                }
+
                 StackPush(stk, logfile, first_operand - second_operand);
                 break;
-            case IN:
-                fscanf(stdin, "%lf", &first_operand);
-                StackPush(stk, logfile, first_operand);
-
+            case BIN:
                 #ifdef DEBUG
                 printf("\033[1;32mCase IN.\033[0m\n");
                 fprintf(logfile, "Case IN\n");
                 printf("\nScanned: %lf\n", first_operand);
                 #endif
 
+                fscanf(stdin, "%lf", &first_operand);
+                StackPush(stk, logfile, first_operand);
+
                 break;
-            case MUL:
+            case BMUL:
                 #ifdef DEBUG
                 printf("\033[1;32mCase MUL.\033[0m\n");
                 fprintf(logfile, "Case MUL\n");
                 #endif
 
-                StackPop(stk, logfile, &first_operand);
-                StackPop(stk, logfile, &second_operand);
+                if(StackPop(stk, logfile, &second_operand)){
+                    printf("Bad second pop!\n");
+                }
+                if(StackPop(stk, logfile, &first_operand)){
+                    printf("Bad first pop!\n");
+                }
+
                 StackPush(stk, logfile, first_operand * second_operand);
                 break;
-            case OUT:
+            case BOUT:
                 #ifdef DEBUG
                 printf("\033[1;32mCase OUT.\033[0m\n");
                 fprintf(logfile, "Case OUT\n");
                 #endif
-
-                StackPop(stk, logfile, &first_operand);
+                if(StackPop(stk, logfile, &first_operand)){
+                    printf("Bad first pop!\n");
+                }
                 fprintf(stdout, "\t\t\t\t[OUT]: %f\n", first_operand);
                 break;
-            case HLT:
+            case BHLT:
                 #ifdef DEBUG
                 printf("\033[1;32mCase HLT.\033[0m\n");
                 fprintf(logfile, "Case HLT\n");
@@ -353,13 +379,13 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile){
     cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX, cpu->programm_counter);
 
     fprintf(logfile, "Command segment dump:\n");
-    for(size_t i = 0; i + 1 < CPU_CS_SIZE && cpu->cs[i] != HLT; i++){
-        printf("i: %zu, cs: %d\n", i, cpu->cs[i]);
-        fprintf(logfile, "%02d ", cpu->cs[i]);
+    for(size_t i = 0; i + 1 < CPU_CS_SIZE && cpu->cs[i] != BHLT; i++){
+        // printf("i: %zu, cs: %d\n", i, cpu->cs[i]);
+        fprintf(logfile, "%03d ", cpu->cs[i]);
     }
     fprintf(logfile, "\n");
 
-    space_counter = 3 * (cpu->programm_counter);
+    space_counter = 4 * (cpu->programm_counter);
     for(size_t i = 0; i < space_counter; i++){
         fprintf(logfile, " ");
     }
@@ -374,7 +400,7 @@ int CpuDtor(Processor *cpu, FILE* logfile){
     StackDtor(&(cpu->stk), logfile);
 
     for(size_t i = 0; i < CPU_CS_SIZE; i++){
-        cpu->cs[i] = VM_POISON;
+        cpu->cs[i] = BHLT;
     }
 
     cpu->RAX = VM_POISON;

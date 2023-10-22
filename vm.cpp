@@ -1,9 +1,14 @@
 #include "main_header.hpp"
 
 int main(const int argc, const char **argv){
+    if(argv[1] == nullptr){
+        printf("Bad commandline argument.\n");
+        return 0;
+    }
     printf("ARGV: %s\n", argv[1]);
     FILE *logfile = fopen("vm_logfile.txt", "w");
     Processor cpu = {};
+
 
     if(CpuCtor(&cpu, CPU_INIT_CAP, logfile) < 0){
         fprintf(logfile, "Failed to create cpu!\n");
@@ -20,13 +25,13 @@ int main(const int argc, const char **argv){
     #endif
 
     #ifndef NO_BINARY_READ
-    int *bin_buff = nullptr;
+    unsigned char* bin_buff = nullptr;
     const char *bin_name = argv[1];
 
     bin_buff = read_from_bin_file(bin_name, logfile);
 
     printf("\nRead bin buff: \n");
-    for(int i = 0; bin_buff[i] != VM_POISON; i++){
+    for(int i = 0; bin_buff[i] != COMMAND_BITS; i++){
         printf("%d\n", bin_buff[i]);
     }
 
