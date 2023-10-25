@@ -14,6 +14,7 @@ int main(const int argc, const char **argv){
         fprintf(logfile, "Failed to create cpu!\n");
         return 0;
     }
+    printf("\033[1;33mError\033[0m: Bad argument at %zu line.\nExiting...\n");
 
     #ifdef NO_BINARY_READ
     const char *name = argv[1];

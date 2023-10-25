@@ -68,7 +68,7 @@ unsigned char* read_from_bin_file(const char* filename, FILE* logfile){
 
 int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
-    int int_command = 0, int_arg = VM_POISON, int_reg = VM_POISON;
+    int int_arg = VM_POISON;
     unsigned char char_command = (char)0, char_reg = (char)0;
     Stack* stk = &(cpu->stk);
 
@@ -83,7 +83,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
         bin_buff++;
     }
 
-    for(;cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != COMMAND_BITS;){
+    while(cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != COMMAND_BITS){
         char_command = cpu->cs[cpu->programm_counter++];
         printf("char_command = %d, pc = %zu\n", char_command, cpu->programm_counter);
         if(char_command == 0) break; // must be removed in future ...
@@ -91,16 +91,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
         switch(char_command & COMMAND_BITS){
             case BPUSH:
                 if((char_command & IMREG_BIT) == 0){
-                    int_arg = 0;
-                    char_reg = cpu->cs[cpu->programm_counter++];
-                    int_arg |= char_reg << 24;
-                    char_reg = cpu->cs[cpu->programm_counter++];
-                    int_arg |= char_reg << 16;
-                    char_reg = cpu->cs[cpu->programm_counter++];
-                    int_arg |= char_reg << 8;
-                    char_reg = cpu->cs[cpu->programm_counter++];
-                    int_arg |= char_reg;
-
+                    int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
 
                     #ifdef DEBUG
                     printf("\033[1;32mCase Push\033[0m\n");
@@ -162,7 +153,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
                     printf("Bad first pop!\n");
                 }
 
-                if(!IsEqual(second_operand, EPS)){
+                if(!IsEqual(second_operand, 0)){
                     StackPush(stk, logfile, first_operand / second_operand);
                 }
                 else{
@@ -234,10 +225,9 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
     }
 
 
-    #ifdef NO_BINARY_READ
+   /* #ifdef NO_BINARY_READ
     size_t len = 0;
     char curr_command[INIT_LEN], curr_arg[INIT_LEN];
-
     while(*buff){
         sscanf(buff, "%s%n", curr_command, &len);
         buff += len;
@@ -368,6 +358,7 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
         cpu->programm_counter++;
     }
     #endif
+    */
 
     return 0;
 }
@@ -380,7 +371,6 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile){
 
     fprintf(logfile, "Command segment dump:\n");
     for(size_t i = 0; i + 1 < CPU_CS_SIZE && cpu->cs[i] != BHLT; i++){
-        // printf("i: %zu, cs: %d\n", i, cpu->cs[i]);
         fprintf(logfile, "%03d ", cpu->cs[i]);
     }
     fprintf(logfile, "\n");

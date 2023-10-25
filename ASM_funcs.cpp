@@ -10,13 +10,14 @@ int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile
 
     FileStruct->buff = (char*)calloc(FileStruct->filesize + 1, sizeof(char));
     if(FileStruct->buff == nullptr){
-        printf("Bad calloc!\n");
+        printf("\033[1;31mError\033[0m: Bad calloc!\nExiting...\n");
         return -1;
     }
 
 
     if(fread(FileStruct->buff, sizeof(char), FileStruct->filesize, input_file) < FileStruct->filesize){
-        fprintf(logfile, "fread readed less than size!\n");
+        fprintf(logfile, "\033[1;31mError\033[0m: fread readed less than size!\n");
+        printf("\033[1;31mError\033[0m: fread readed less than size!\nExiting...\n");
         return -1;
     }
     fclose(input_file);
@@ -32,61 +33,39 @@ int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile
 }
 
 int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile){
-    #ifndef INTEGER_LOGIC
-    #ifndef CHAR_LOGIC
-    printf("\033[1;32mERROR\033[0m PLEASE DEFINE CHAR_LOGIC OR INTEGER_LOGIC. EXITING...\n");
-    exit(-1);
-    #endif
-    #endif
     const char* buff = FileStruct->buff;
     size_t line_counter = 0, len = 0, binary_pos_counter = 0;
-    int int_command = VM_POISON, int_arg = VM_POISON, *binary_code = nullptr;
+    int int_arg = VM_POISON;
     bool silent_arg = false;
-    char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[2 * INIT_LEN] = {};
+    char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {};
 
-    unsigned char final_processing_unit = (char)0u, bit_command = (char)0;
+    unsigned char opcode = (char)0u;
     unsigned char *char_binary_code = nullptr;
 
 
-    // TODO: think whether to use char's instead of int's
+    fprintf(logfile, "Initial buff:\n%s\n", buff);
 
-    // imm/reg  reg num   opcode
-    //    0        00     00000
-
-
-    fprintf(logfile, "Initial buff::\n%s\n", buff);
-
-    sprintf(version, "VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
+    sprintf(version, "Current signature: VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
     fputs(version, output);
 
-    binary_code = (int*)calloc(2 * (FileStruct->num_of_str) + 4, sizeof(int)); // + 4 = 1 + cpu_version + num_of_regs +
-    char_binary_code = (unsigned char*)calloc(2 * (FileStruct->num_of_str) + 4, sizeof(char)); //  + command_count
+    char_binary_code = (unsigned char*)calloc(2 * (FileStruct->num_of_str) + 4, sizeof(char));
+    // + 4 = 1 + cpu_version + num_of_regs + command_count
 
-    // #ifdef INTEGER_LOGIC
-    // binary_code[0] = CPU_VERSION;
-    // binary_code[1] = NUM_OF_REGS;
-    // binary_code[2] = NUM_OF_COMMANDS;
-    // #endif
-
-    // #ifdef CHAR_LOGIC
-    char_binary_code[0] = (char)CPU_VERSION;
-    char_binary_code[1] = (char)NUM_OF_REGS;
-    char_binary_code[2] = (char)NUM_OF_COMMANDS;
-    // #endif
-
-    binary_pos_counter += 3;
+    char_binary_code[binary_pos_counter++] = (char)CPU_VERSION;
+    char_binary_code[binary_pos_counter++] = (char)NUM_OF_REGS;
+    char_binary_code[binary_pos_counter++] = (char)NUM_OF_COMMANDS;
 
     while(buff[1]){
-        final_processing_unit = (char)0;
-
-        if(!isalpha(*buff)) SKIP_STR();
+        opcode = (char)0;
+        while(!isalpha(*buff)) buff++;
 
         if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
-            fprintf(logfile, "Failed to read command!\n");
+            printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
+            return -1;
         }
 
         buff += len;
-        fprintf(logfile, "\ncommand: %s, buff::%s\n", curr_command, buff);
+        fprintf(logfile, "\nCommand: %s, buff:%s\n", curr_command, buff);
 
         if(*buff == '\n' || sscanf(buff, "%s", curr_arg) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
@@ -97,111 +76,77 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
         CHECKPOINT("first check");
 
-        // #ifdef INTEGER_LOGIC
-        // COMMAND_COMPARE_ASM("push", PUSH, curr_command, int_command);
-        // COMMAND_COMPARE_ASM("pop", RPOP, curr_command, int_command);
-        // if(int_command != VM_POISON){
-        // #endif
-
-        // #ifdef CHAR_LOGIC
         printf("curr command: %s\n", curr_command);
-        BITWISE_COMPARE_ASM("push", BPUSH, curr_command, final_processing_unit);
-        BITWISE_COMPARE_ASM("pop", BPOP, curr_command, final_processing_unit);
-        if((final_processing_unit & COMMAND_BITS) != 0u){
-        // #endif
+
+        BITWISE_COMPARE_ASM(curr_command, "push", BPUSH, opcode);
+        BITWISE_COMPARE_ASM(curr_command, "pop", BPOP, opcode);
+
+        if((opcode & COMMAND_BITS) != 0u){
 
             CHECKPOINT("non-poison - case");
 
             if(silent_arg == true){
-                fprintf(logfile, "Error: Wrong command at %zu line.\n", line_counter + 1);
+                fprintf(logfile, "\033[1;31mError\033[0m: Wrong command at %zu line.\nExiting...\n", line_counter + 1);
                 return -1;
             }
 
-            if(curr_arg[0] == 'r'){
+
+            if(curr_arg[0] == 'r' && curr_arg[2] == 'x' && abs(curr_arg[1] - 'a') <= 3){
                 fprintf(logfile, "curr arg: %s, register case.\n", curr_arg);
-                printf("curr arg: %s, register case.\n", curr_arg);
+                printf("Curr arg: %s, register case\n", curr_arg);
 
-//                 #ifdef INTEGER_LOGIC
-//                 REGISTER_COMPARE_ASM("rax", RAX, curr_arg, int_arg);
-//                 REGISTER_COMPARE_ASM("rbx", RBX, curr_arg, int_arg);
-//                 REGISTER_COMPARE_ASM("rcx", RCX, curr_arg, int_arg);
-//                 REGISTER_COMPARE_ASM("rdx", RDX, curr_arg, int_arg);
-//                 if(int_arg == VM_POISON){
-//
-//                     fprintf(logfile, "Error: Unknown argument at %zu line: %s\n", line_counter, curr_arg);
-//                     printf("Error: Unknown argument at %zu line: %s\n", line_counter, curr_arg);
-//
-//                     return -1;
-//                 }
-//                 #endif
+                BITWISE_COMPARE_ASM(curr_arg, "rax", BRAX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rbx", BRBX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rcx", BRCX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rdx", BRDX, opcode);
 
-                // #ifdef CHAR_LOGIC
-                BITWISE_COMPARE_ASM("rax", BRAX, curr_arg, final_processing_unit);
-                BITWISE_COMPARE_ASM("rbx", BRBX, curr_arg, final_processing_unit);
-                BITWISE_COMPARE_ASM("rcx", BRCX, curr_arg, final_processing_unit);
-                BITWISE_COMPARE_ASM("rdx", BRDX, curr_arg, final_processing_unit);
-                // #endif
-
-                printf("final_processing_unit after regs is %d\n", final_processing_unit);
-                fprintf(logfile, "final_processing_unit after regs is %d\n", final_processing_unit);
+                printf("opcode after regs is %d\n", opcode);
+                fprintf(logfile, "opcode after regs is %d\n", opcode);
 
 
-                final_processing_unit |= REGISTER_BIT;
-                char_binary_code[binary_pos_counter++] = final_processing_unit;
+                opcode |= REGISTER_BIT;
+                char_binary_code[binary_pos_counter++] = opcode;
 
-                printf("final_processing_unit after regs and is %d\n", final_processing_unit);
-                fprintf(logfile, "final_processing_unit after regs and is %d\n", final_processing_unit);
+                printf("full opcode after regs is %d\n", opcode);
+                fprintf(logfile, "full opcode after regs is %d\n", opcode);
 
-            }else{                                          // 'else' for curr_arg[0] != 'r' case
-                int_arg = atoi(curr_arg);
-                final_processing_unit &= ~IMREG_BIT;
-                char_binary_code[binary_pos_counter++] = final_processing_unit;
-                char_binary_code[binary_pos_counter++] = (int_arg & FIRST_INT_BYTE) >> 24; /* (4 bytes <=> 32 bits) */
-                char_binary_code[binary_pos_counter++] = (int_arg & SECOND_INT_BYTE) >> 16;
-                char_binary_code[binary_pos_counter++] = (int_arg & THIRD_INT_BYTE)  >> 8;
-                char_binary_code[binary_pos_counter++] = int_arg & BHLT; /* BHLT == LAST_INT_BYTE*/
+            }else{
+                if(sscanf(curr_arg, "%d", &int_arg) != 1){
+                    printf("\033[1;31mError\033[0m: Bad argument at %zu line.\nExiting...\n", line_counter + 1);
+                    return -1;
+                }
+
+                opcode &= ~IMREG_BIT;
+                char_binary_code[binary_pos_counter++] = opcode;
+
+                *(int *)(char_binary_code + binary_pos_counter) = int_arg;
+                binary_pos_counter += 4;
+
             }
-
-            // #ifdef INTEGER_LOGIC
-            // sprintf(output_str, "%d %d\n", int_command, int_arg);
-            // binary_code[binary_pos_counter++] = int_command;
-            // #endif
-
         }
         else{
             CHECKPOINT("after regs");
-            printf("FPU after regs: %d\n", final_processing_unit);
-            fprintf(logfile, "FPU after regs: %d\n", final_processing_unit);
+            printf("FPU after regs: %d\n", opcode);
+            fprintf(logfile, "FPU after regs: %d\n", opcode);
 
-//             #ifdef INTEGER_LOGIC
-//             COMMAND_COMPARE_ASM("div", DIV, curr_command, int_command);
-//             COMMAND_COMPARE_ASM("sub", SUB, curr_command, int_command);
-//             COMMAND_COMPARE_ASM("out", OUT, curr_command, int_command);
-//             COMMAND_COMPARE_ASM("hlt", HLT, curr_command, int_command);
-//             COMMAND_COMPARE_ASM("in",  IN, curr_command, int_command);
-//             COMMAND_COMPARE_ASM("mul", MUL, curr_command, int_command);
-//
-//             sprintf(output_str, "%d\n", int_command);
-//             binary_code[binary_pos_counter++] = int_command;
-//             binary_code[binary_pos_counter++] = int_arg;
-//             #endif
+            BITWISE_COMPARE_ASM(curr_command, "div", BDIV, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "sub", BSUB, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "out", BOUT, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "hlt", BHLT, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "in",  BIN, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "mul", BMUL, opcode);
 
-            // #ifdef CHAR_LOGIC
-            BITWISE_COMPARE_ASM("div", BDIV, curr_command, final_processing_unit);
-            BITWISE_COMPARE_ASM("sub", BSUB, curr_command, final_processing_unit);
-            BITWISE_COMPARE_ASM("out", BOUT, curr_command, final_processing_unit);
-            BITWISE_COMPARE_ASM("hlt", BHLT, curr_command, final_processing_unit);
-            BITWISE_COMPARE_ASM("in",  BIN,  curr_command, final_processing_unit);
-            BITWISE_COMPARE_ASM("mul", BMUL, curr_command, final_processing_unit);
-            // #endif
+            char_binary_code[binary_pos_counter++] = opcode;
 
-            char_binary_code[binary_pos_counter++] = final_processing_unit;
+            printf("FPU after all: %d\n", opcode);
+            fprintf(logfile, "FPU after all: %d\n", opcode);
 
-            printf("FPU after all: %d\n", final_processing_unit);
-            fprintf(logfile, "FPU after all: %d\n", final_processing_unit);
+            if((opcode & COMMAND_BITS) == 0b0){
+                printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
+                return -1;
+            }
 
-
-            CHECKPOINT("one sprintf");
+            CHECKPOINT("After all command compares.");
         }
 
         if(fputs(output_str, output)){
@@ -213,40 +158,18 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             SKIP_STR();
         }
 
-        fprintf(logfile, "newbuff::%s\n", buff);
+        fprintf(logfile, "New buff:%s\n", buff);
         silent_arg = false;
 
         line_counter++;
-        int_command = VM_POISON;
         int_arg = VM_POISON;
     }
-    #ifdef INTEGER_LOGIC
-    binary_code[binary_pos_counter++] = VM_POISON;
-    if(fwrite(binary_code, sizeof(int), binary_pos_counter + 2, bin_output) < binary_pos_counter){
-        printf("fwrite failed!\n");
-        return -1;
-    }
-    #endif
 
-    #ifdef CHAR_LOGIC
     if(fwrite(char_binary_code, sizeof(char), binary_pos_counter + 2, bin_output) < binary_pos_counter){
         printf("fwrite failed!\n");
         return -1;
     }
-    #endif
 
-
-    #ifdef DEBUG
-    printf("Binary code array:\n");
-    for(size_t i = 0; i < binary_pos_counter; i++){
-        if(binary_code[i] == VM_POISON){
-            printf("\n");
-            continue;
-        }
-        printf("%d ", binary_code[i]);
-    }
-    #endif
-    free(binary_code);
     free(char_binary_code);
     return 0;
 }

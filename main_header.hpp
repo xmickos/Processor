@@ -35,7 +35,11 @@ struct MyFileStruct{
 
 #define STRINGIFY(val) #val
 
+#ifdef DEBUG
 #define CHECKPOINT(message) do{ printf("Checkpoint " message "\n"); fprintf(logfile, "Checkpoint " message "\n"); } while(0)
+#else
+#define CHECKPOINT(message) ;
+#endif
 
 #define CPU_VERIF(condition, message)     do{ if(condition){                               \
         fprintf(logfile, "[CPU Verificator] " message "\n");                               \
@@ -46,7 +50,7 @@ struct MyFileStruct{
             int_command = value;                                                                                      \
         }                                                                                                             \
 
-#define BITWISE_COMPARE_ASM(arg, value, curr_command, bit_command)         if(!strcmp(curr_command, arg)){            \
+#define BITWISE_COMPARE_ASM(curr_command, arg, value, bit_command)         if(!strcmp(curr_command, arg)){            \
             bit_command |= value;                                                                                     \
         }                                                                                                             \
 
