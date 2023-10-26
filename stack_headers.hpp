@@ -9,6 +9,7 @@
 #define BASIC_POISON 0xC67178F2
 #define EPS 1e-3
 #define DEBUG
+#define SILENT_DEBUG
 
 #define SINGLE_BIT(bit) (1U << (unsigned) bit)
 
@@ -25,7 +26,8 @@ enum STACK_ERRORS {
     LOGFILE_NULL = SINGLE_BIT(7),
     RESIZE_YES   = SINGLE_BIT(8),
   FIRST_CAN_BAD  = SINGLE_BIT(9),
-  SECOND_CAN_BAD = SINGLE_BIT(10)
+  SECOND_CAN_BAD = SINGLE_BIT(10),
+  BAD_ASM_POP   = SINGLE_BIT(11)
 }; // TODO: enum
 
 //uint32_t

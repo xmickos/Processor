@@ -104,7 +104,9 @@ uint32_t Verificator(Stack *stk, FILE* logfile){      // Сделать это d
     }
 
     if(stk->errors == 0){
-        DEBUG_ECHO(logfile, "No errors found!\n");
+        #ifndef SILENT_DEBUG
+            DEBUG_ECHO(logfile, "No errors found!\n");
+        #endif
         return stk->errors;
     }
 
@@ -117,8 +119,7 @@ uint32_t StackPop(Stack *stk, FILE *logfile, Elem_t *where_to_pop){
     GENERAL_VERIFICATION(stk, logfile);
     if(where_to_pop == nullptr){
         printf("Bad fix, exiting.\n");
-        // TODO: do not exit!!!!!!!!!!!
-        return -1;
+        return BAD_ASM_POP;
     }
 
     // TODO: return any error pls

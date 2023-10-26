@@ -42,28 +42,28 @@ int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile){
 }
 
 
-#ifndef NO_BINARY_READ
-
 unsigned char* read_from_bin_file(const char* filename, FILE* logfile){
     FILE* input_file = fopen(filename, "rb");
     struct stat filestat;
-    size_t size = 0;
+    size_t size = 0, read_size = 0;
 
     stat(filename, &filestat);
     size = (size_t)filestat.st_size;
     printf("size from file: %lu\n", size);
 
-    unsigned char *buff = (unsigned char*)calloc(size + 1, sizeof(char));
-    if(fread(buff, sizeof(char), size, input_file) < size){
-        fprintf(logfile, "fread readed less than size!\n");
+    unsigned char *buff = (unsigned char*)calloc(size + 2, sizeof(char));
+    read_size = fread(buff, sizeof(char), size, input_file);
+    if(read_size < size){
+        fprintf(logfile, "fread read less than size!\n");
     }
 
-    buff[size] |= COMMAND_BITS;
+    buff[read_size] = COMMAND_BITS;
+
+    printf("buff[size] = %d\n", buff[size]);
 
     fclose(input_file);
     return buff;
 }
-#endif
 
 
 int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
@@ -78,20 +78,24 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
     }
     cpu->programm_counter += 3; // 3 for cpu version, num of regs and num of commands;
 
-    for(size_t i = 0; i < CPU_CS_SIZE && bin_buff[0] != BHLT; i++){
-        cpu->cs[i] = *bin_buff;
-        bin_buff++;
+    printf("\t\t\t\033[1;36mGot buffer:\033[0m\n");
+    for(int j = 1; bin_buff[j - 1] != COMMAND_BITS; j++){
+        printf("%d\n", bin_buff[j]);
     }
 
-    while(cpu->programm_counter < CPU_CS_SIZE || bin_buff[cpu->programm_counter] != COMMAND_BITS){
+    for(size_t i = 2; i < CPU_CS_SIZE && bin_buff[i - 2] != COMMAND_BITS; i++){
+        cpu->cs[i] = bin_buff[i];
+    }
+
+    while(cpu->programm_counter < CPU_CS_SIZE && cpu->cs[cpu->programm_counter - 1] != COMMAND_BITS){
         char_command = cpu->cs[cpu->programm_counter++];
         printf("char_command = %d, pc = %zu\n", char_command, cpu->programm_counter);
-        if(char_command == 0) break; // must be removed in future ...
 
         switch(char_command & COMMAND_BITS){
             case BPUSH:
                 if((char_command & IMREG_BIT) == 0){
                     int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
+                    cpu->programm_counter+=4;
 
                     #ifdef DEBUG
                     printf("\033[1;32mCase Push\033[0m\n");
@@ -222,6 +226,8 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
                 fprintf(stdout, "HALT: exiting...\n");
                 return 0;
         }
+
+
     }
 
 
