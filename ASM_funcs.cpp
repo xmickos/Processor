@@ -62,8 +62,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
     while(buff[1]){
         opcode = (char)0;
-        printf("%d\n", *buff != ':');
-        while(!isalpha(*buff) && (*buff != ':')) buff++;
+        // while(!isalpha(*buff) && (*buff != ':')) buff++;
 
         if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
             printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
@@ -78,13 +77,15 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             silent_arg = true;
         }
 
-        if(curr_command[0] == ':' && curr_command[1] - '9' <= 0 && curr_command[1] - '0' >= 0){
+        if(curr_command[1] == ':' && curr_command[0] - '9' <= 0 && curr_command[0] - '0' >= 0){
             CHECKPOINT("HERE!!!");
-            pointers[atoi(curr_command + 1)] = (int)line_counter;
-            fprintf(logfile, "Processed as :%d – read: %s\n", atoi(curr_command + 1), curr_command);
-            printf("Written: %d\n", pointers[atoi(curr_command + 1)]);
+            printf("curr_command: %s, atoi(curr_command): %d\n", curr_command, atoi(curr_command));
+            pointers[atoi(curr_command)] = (int)line_counter;
+            fprintf(logfile, "Processed as :%d – read: %s\n", atoi(curr_command), curr_command);
+            printf("Written: %d\n", pointers[atoi(curr_command)]);
             line_counter++;
             SKIP_STR();
+            silent_arg = false;
             continue;
         }
 
@@ -200,7 +201,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     buff = ref_buff;
 
     for(int i = 3; buff[1];){
-        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[0] != ':'){
+        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[1] != ':'){
             i++;
         }
 
@@ -210,7 +211,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         if(*buff == ' '){
             printf("yep.");
             if(!strcmp(curr_command, "jmp")){
-                buff+=2;
+                buff++;
 
                 if(sscanf(buff, "%d", &int_arg) < 1 || int_arg < 0 || int_arg > 10){
                     printf("\033[1;31mError\033[0m: Wrong pointer for jmp.\n");

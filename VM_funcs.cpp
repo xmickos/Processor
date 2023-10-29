@@ -146,6 +146,12 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 break;
             case BJMP:
                 int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
+                printf("int_arg = %d\n", int_arg);
+                if(int_arg < 0){
+                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
+                    return -1;
+                }
+
                 cpu->programm_counter = (size_t)int_arg;
 
                 #ifdef DEBUG
