@@ -1,16 +1,9 @@
-:3
-:2
+:1
 in
 pop rax
 push rax
 push rax
-push 4
 mul
 out
-jmp :3
-in
-hlt
-in
-jmp :2
-in
+jmp :1
 hlt

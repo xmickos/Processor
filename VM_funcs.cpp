@@ -66,7 +66,7 @@ unsigned char* read_from_bin_file(const char* filename, FILE* logfile){
 }
 
 
-int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
+int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
     Elem_t first_operand = VM_POISON, second_operand = VM_POISON;
     int int_arg = VM_POISON;
     unsigned char char_command = (char)0, char_reg = (char)0;
@@ -144,6 +144,18 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
                 printf("\033[1;34mREGS\033[0m: %f %f %f %f\n", cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX);
                 CpuDump(cpu, logfile);
                 break;
+            case BJMP:
+                int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
+                cpu->programm_counter = (size_t)int_arg;
+
+                #ifdef DEBUG
+                printf("\033[1;32mCase Jump\033[0m\n");
+                printf("int_arg = %d\n", int_arg);
+                fprintf(logfile, "Case Jump\n");
+                fprintf(logfile, "int_arg = %d\n", int_arg);
+                #endif
+
+                break;
             case BDIV:
                 #ifdef DEBUG
                 printf("\033[1;32mCase DIV\033[0m\n");
@@ -188,7 +200,10 @@ int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char*
                 printf("\nScanned: %lf\n", first_operand);
                 #endif
 
-                fscanf(stdin, "%lf", &first_operand);
+                while(!fscanf(stdin, "%lf", &first_operand)){
+                    while(!getchar());
+                }
+
                 StackPush(stk, logfile, first_operand);
 
                 break;

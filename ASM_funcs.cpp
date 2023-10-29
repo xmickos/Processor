@@ -197,37 +197,8 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     }
     printf("\n");
 
-    // for(size_t i = 0, j = 0; i < binary_pos_counter; i++){
-    //     printf("ALO:%d %d %d\n", *(int *)(char_binary_code + i), (int16_t)char_binary_code[i], (int16_t)JMPFLG);
-    //     if((int16_t)char_binary_code[i] == JMPFLG){
-    //         printf("HERE!\n");
-    //         WRITE_INT(i, pointers[j++]);
-    //         i+=4;
-    //     }
-    // }
-//
-//     buff = ref_buff;
-//     for(int i = 3; buff[1]; i++){
-//         sscanf(buff, "%s%n", &curr_command, &len);
-//         printf("\ncurr_command: %s, len = %zu\n", curr_command, len);
-//         buff += len + 1;
-//         printf("buff:%ssscanf: %d\n", buff, sscanf(buff, "%d", &int_arg));
-//         if(!strcmp(curr_command, "push") && sscanf(buff, "%d", &int_arg)){
-//             printf("\nDA!\n");
-//             i+=4;
-//         }
-//         if(!strcmp(curr_command, "jmp")){
-//             sscanf(buff, "%s", curr_arg);
-//             i+=2;
-//             printf("curr_arg:%s, pointers[...] = %d, i = %d\n", curr_arg, pointers[atoi(curr_arg + 1)], i);
-//             WRITE_INT(i, pointers[atoi(curr_arg + 1)]);
-//         }
-//         if(*buff != '\n') SKIP_STR();
-//         i++;
-//     }
-
-
     buff = ref_buff;
+
     for(int i = 3; buff[1];){
         if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[0] != ':'){
             i++;
@@ -247,17 +218,16 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 }
 
                 printf("curr_arg:%s, pointers[%d] = %d, i = %d\n", curr_arg, int_arg, pointers[int_arg], i);
-                WRITE_INT(i, pointers[int_arg]);
+                WRITE_INT(i, pointers[int_arg] + 3);
                 i+=4;
             }
             buff++;
 
             if(sscanf(buff, "%d", &int_arg)){
                 i+=4;
-                SKIP_STR();
-            }else{
-                SKIP_STR();
             }
+
+            SKIP_STR();
         }
     }
 
