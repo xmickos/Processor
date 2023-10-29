@@ -33,14 +33,18 @@ int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile
 }
 
 int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile){
-    const char* buff = FileStruct->buff;
-    size_t line_counter = 0, len = 0, binary_pos_counter = 0;
-    int int_arg = VM_POISON;
+    char* buff = FileStruct->buff, *ref_buff = FileStruct->buff;
+    size_t line_counter = 0, len = 0, binary_pos_counter = 0; /*pointers_counter = 0;*/
+    int int_arg = VM_POISON, pointers[CPU_CS_SIZE] = {};
     bool silent_arg = false;
     char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {};
 
     unsigned char opcode = (char)0u;
     unsigned char *char_binary_code = nullptr;
+
+    for(size_t i = 0; i < CPU_CS_SIZE; i++){
+        pointers[i] = -1;
+    }
 
 
     fprintf(logfile, "Initial buff:\n%s\n", buff);
@@ -49,6 +53,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     fputs(version, output);
 
     char_binary_code = (unsigned char*)calloc(2 * (FileStruct->num_of_str) + 4, sizeof(char));
+
     // + 4 = 1 + cpu_version + num_of_regs + command_count
 
     char_binary_code[binary_pos_counter++] = (char)CPU_VERSION;
@@ -57,7 +62,8 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
     while(buff[1]){
         opcode = (char)0;
-        while(!isalpha(*buff)) buff++;
+        printf("%d\n", *buff != ':');
+        while(!isalpha(*buff) && (*buff != ':')) buff++;
 
         if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
             printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
@@ -72,6 +78,16 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             silent_arg = true;
         }
 
+        if(curr_command[0] == ':' && curr_command[1] - '9' <= 0 && curr_command[1] - '0' >= 0){
+            CHECKPOINT("HERE!!!");
+            pointers[atoi(curr_command + 1)] = (int)line_counter;
+            fprintf(logfile, "Processed as :%d – read: %s\n", atoi(curr_command + 1), curr_command);
+            printf("Written: %d\n", pointers[atoi(curr_command + 1)]);
+            line_counter++;
+            SKIP_STR();
+            continue;
+        }
+
         fprintf(logfile, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
 
         CHECKPOINT("first check");
@@ -80,6 +96,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
         BITWISE_COMPARE_ASM(curr_command, "push", BPUSH, opcode);
         BITWISE_COMPARE_ASM(curr_command, "pop", BPOP, opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jmp", BJMP, opcode);
 
         if((opcode & COMMAND_BITS) != 0u){
 
@@ -111,17 +128,25 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 fprintf(logfile, "full opcode after regs is %d\n", opcode);
 
             }else{
-                if(sscanf(curr_arg, "%d", &int_arg) != 1){
+                if(sscanf(curr_arg, "%d", &int_arg) != 1 && curr_arg[0] != ':'){
                     printf("\033[1;31mError\033[0m: Bad argument at %zu line.\nExiting...\n", line_counter + 1);
                     return -1;
                 }
-
+                CHECKPOINT("IMREG_BIT");
                 opcode &= ~IMREG_BIT;
                 char_binary_code[binary_pos_counter++] = opcode;
+                if(opcode == BPUSH){
+                    WRITE_INT(binary_pos_counter, int_arg);
+                    binary_pos_counter+=4;
+                }
+            }
 
-                *(int *)(char_binary_code + binary_pos_counter) = int_arg;
-                binary_pos_counter += 4;
-
+            printf("\033[1;36mOpcode\033[0m: %d\n", opcode);
+            if(opcode == BJMP){
+                CHECKPOINT("BMJP, ");
+                printf("opcode: %d\n", opcode);
+                WRITE_INT(binary_pos_counter, JMPFLG);
+                binary_pos_counter+=4;
             }
         }
         else{
@@ -142,7 +167,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             fprintf(logfile, "FPU after all: %d\n", opcode);
 
             if((opcode & COMMAND_BITS) == 0b0){
-                printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
+                printf("\033[1;31mError\033[0m: Unknown command at %zu line: %s \nExiting...\n", line_counter + 1, curr_command);
                 return -1;
             }
 
@@ -164,6 +189,90 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         line_counter++;
         int_arg = VM_POISON;
     }
+
+
+    printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
+    for(size_t i = 0; i < binary_pos_counter; i++){
+        printf("%3d ", char_binary_code[i]);
+    }
+    printf("\n");
+
+    // for(size_t i = 0, j = 0; i < binary_pos_counter; i++){
+    //     printf("ALO:%d %d %d\n", *(int *)(char_binary_code + i), (int16_t)char_binary_code[i], (int16_t)JMPFLG);
+    //     if((int16_t)char_binary_code[i] == JMPFLG){
+    //         printf("HERE!\n");
+    //         WRITE_INT(i, pointers[j++]);
+    //         i+=4;
+    //     }
+    // }
+//
+//     buff = ref_buff;
+//     for(int i = 3; buff[1]; i++){
+//         sscanf(buff, "%s%n", &curr_command, &len);
+//         printf("\ncurr_command: %s, len = %zu\n", curr_command, len);
+//         buff += len + 1;
+//         printf("buff:%ssscanf: %d\n", buff, sscanf(buff, "%d", &int_arg));
+//         if(!strcmp(curr_command, "push") && sscanf(buff, "%d", &int_arg)){
+//             printf("\nDA!\n");
+//             i+=4;
+//         }
+//         if(!strcmp(curr_command, "jmp")){
+//             sscanf(buff, "%s", curr_arg);
+//             i+=2;
+//             printf("curr_arg:%s, pointers[...] = %d, i = %d\n", curr_arg, pointers[atoi(curr_arg + 1)], i);
+//             WRITE_INT(i, pointers[atoi(curr_arg + 1)]);
+//         }
+//         if(*buff != '\n') SKIP_STR();
+//         i++;
+//     }
+
+
+    buff = ref_buff;
+    for(int i = 3; buff[1];){
+        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[0] != ':'){
+            i++;
+        }
+
+        printf("\ncurr_command: %s, len = %zu, i = %d\n", curr_command, len, i);
+        buff += len;
+
+        if(*buff == ' '){
+            printf("yep.");
+            if(!strcmp(curr_command, "jmp")){
+                buff+=2;
+
+                if(sscanf(buff, "%d", &int_arg) < 1 || int_arg < 0 || int_arg > 10){
+                    printf("\033[1;31mError\033[0m: Wrong pointer for jmp.\n");
+                    return -1;
+                }
+
+                printf("curr_arg:%s, pointers[%d] = %d, i = %d\n", curr_arg, int_arg, pointers[int_arg], i);
+                WRITE_INT(i, pointers[int_arg]);
+                i+=4;
+            }
+            buff++;
+
+            if(sscanf(buff, "%d", &int_arg)){
+                i+=4;
+                SKIP_STR();
+            }else{
+                SKIP_STR();
+            }
+        }
+    }
+
+
+
+    printf("pointers:\n");
+    for(size_t i = 0; i < binary_pos_counter; i++){
+        printf("%3d", pointers[i]);
+    }
+
+    printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
+    for(size_t i = 0; i < binary_pos_counter; i++){
+        printf("%3d ", char_binary_code[i]);
+    }
+
 
     if(fwrite(char_binary_code, sizeof(char), binary_pos_counter + 2, bin_output) < binary_pos_counter){
         printf("fwrite failed!\n");

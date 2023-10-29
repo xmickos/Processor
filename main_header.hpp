@@ -76,12 +76,14 @@ struct MyFileStruct{
                         StackPush(stk, logfile, cpu->register_name);                                        \
                         break;                                                                              \
 
-#define COPY_FR_REG(register, register_name, out_str)                     case register_name:             \
-                        strcpy(out_str, #register_name);                                             \
-                        break;                                                                       \
+#define COPY_FR_REG(register, register_name, out_str)                     case register_name:               \
+                        strcpy(out_str, #register_name);                                                    \
+                        break;                                                                              \
+
+#define WRITE_INT(pos_index, argument)     *(int *)(char_binary_code + pos_index) = argument                \
 
 #ifdef DEBUG
-#define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                            \
+#define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                                   \
                 fprintf(logfile, "Case" #COMMAND_NAME "\n");} while(0)
 #else
 #define SWITCH_ECHO(COMMAND_NAME) ;
@@ -114,26 +116,25 @@ enum FUNC_CODES{
     IMREG_BIT       = (0b10000000u),
     REGISTER_BITS   = (0b01100000u),
     COMMAND_BITS    = (0b00011111u),
-    FIRST_INT_BYTE  = (0b11111111 << 24),
-    SECOND_INT_BYTE = (0b0000000011111111 << 16),
-    THIRD_INT_BYTE  = (0b000000000000000011111111 << 8)
 };
 
 enum BIT_FUNC_CODES{
-    BPUSH = (0b00000001),
-    BPOP  = (0b00000100),
-    BDIV  = (0b00000010),
-    BSUB  = (0b00000011),
-    BOUT  = (0b00000101),
-    BIN   = (0b00000110),
-    BMUL  = (0b00000111),
-    BADD  = (0b00001001),
-    BSQRT = (0b00001000),
-    BHLT  = (0b11111111),
-    BRAX  = (0b00000000),
-    BRBX  = (0b00100000),
-    BRCX  = (0b01000000),
-    BRDX  = (0b01100000)
+    BPUSH  = (0b00000001),
+    BPOP   = (0b00000100),
+    BDIV   = (0b00000010),
+    BSUB   = (0b00000011),
+    BOUT   = (0b00000101),
+    BIN    = (0b00000110),
+    BMUL   = (0b00000111),
+    BADD   = (0b00001001),
+    BSQRT  = (0b00001000),
+    BHLT   = (0b11111111),
+    JMPFLG = (0b11111110),
+    BRAX   = (0b00000000),
+    BRBX   = (0b00100000),
+    BRCX   = (0b01000000),
+    BRDX   = (0b01100000),
+    BJMP   = (0b00001010)
 };
 
 int read_from_file(const char* filename, MyFileStruct *FileStruct, FILE* logfile);
@@ -142,7 +143,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 
-int kernel(const char* buff, Processor *cpu, FILE* logfile, const unsigned char* bin_buff);
+int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff);
 
 int CpuDtor(Processor *cpu, FILE* logfile);
 
