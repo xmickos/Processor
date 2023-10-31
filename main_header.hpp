@@ -14,6 +14,8 @@
 
 #define CPU_PC_SIZE 128
 
+#define MAX_POINTERNAME_LEN 128
+
 struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
@@ -25,6 +27,11 @@ struct MyFileStruct{
     char* buff = nullptr;
     size_t num_of_str = 0;
     size_t filesize = 0;
+};
+
+struct MyPointer{
+    char name[MAX_POINTERNAME_LEN] = {};
+    ssize_t address = -1;
 };
 
 #define INIT_LEN 25
@@ -41,10 +48,10 @@ struct MyFileStruct{
 #define CHECKPOINT(message) ;
 #endif
 
-#define CPU_VERIF(condition, message)     do{ if(condition){                               \
-        fprintf(logfile, "[CPU Verificator] " message "\n");                               \
-        return -1;                                                                         \
-    } }while(0)                                                                            \
+#define CPU_VERIF(condition, message)     do{ if(condition){                                                          \
+        fprintf(logfile, "[CPU Verificator] " message "\n");                                                          \
+        return -1;                                                                                                    \
+    } }while(0)                                                                                                       \
 
 #define COMMAND_COMPARE_ASM(arg, value, curr_command, int_command)         if(!strcmp(curr_command, arg)){            \
             int_command = value;                                                                                      \
@@ -65,47 +72,37 @@ struct MyFileStruct{
             strcpy(out_str, string_arg);                                                                              \
         }                                                                                                             \
 
-#define SKIP_STR() do{ while(*buff != '\n' && *buff != '\0') buff++;                                 \
-                        buff++;  } while(0)                                                          \
+#define SKIP_STR() do{ while(*buff != '\n' && *buff != '\0') buff++;                                                  \
+                        buff++;  } while(0)                                                                           \
 
-#define REG_ASSIGN(cpu, logfile, register_name, register_code, value)                     case register_code:                      \
-                        cpu->register_name = value;                                                                                \
-                        break;                                                                                                     \
+#define REG_ASSIGN(cpu, logfile, register_name, register_code, value)                     case register_code:         \
+                        cpu->register_name = value;                                                                   \
+                        break;                                                                                        \
 
-#define PUSH_FR_REG(stk, logfile, register_name, register_code)                     case register_code:     \
-                        StackPush(stk, logfile, cpu->register_name);                                        \
-                        break;                                                                              \
+#define PUSH_FR_REG(stk, logfile, register_name, register_code)                     case register_code:               \
+                        StackPush(stk, logfile, cpu->register_name);                                                  \
+                        break;                                                                                        \
 
-#define COPY_FR_REG(register, register_name, out_str)                     case register_name:               \
-                        strcpy(out_str, #register_name);                                                    \
-                        break;                                                                              \
+#define COPY_FR_REG(register, register_name, out_str)                     case register_name:                         \
+                        strcpy(out_str, #register_name);                                                              \
+                        break;                                                                                        \
 
-#define WRITE_INT(pos_index, argument)     *(int *)(char_binary_code + pos_index) = argument                \
+#define WRITE_INT(pos_index, argument)     *(int *)(char_binary_code + pos_index) = argument                          \
 
 #ifdef DEBUG
-#define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                                   \
+#define SWITCH_ECHO(COMMAND_NAME)  do{ printf("Case" #COMMAND_NAME "\n");                                             \
                 fprintf(logfile, "Case" #COMMAND_NAME "\n");} while(0)
 #else
 #define SWITCH_ECHO(COMMAND_NAME) ;
 #endif
 
+#define POINTERS_DUMP(pointers, pointers_counter) do{         printf("pointers at %d line:\n", __LINE__);             \
+        for(size_t i = 0; i < pointers_counter; i++){                                                                 \
+            printf("(%s, %3zd)\n", pointers[i].name, pointers[i].address);                                            \
+        } }while(0)
+
 
 enum FUNC_CODES{
-    PUSH  = (1),
-    RPUSH = (33),
-    DIV   = (2),
-    SUB   = (3),
-    POP   = (43),
-    OUT   = (5),
-    IN    = (6),
-    MUL   = (7),
-    ADD   = (9),
-    SQRT  = (8),
-    HLT   = (-1),
-    RAX   = (1),
-    RBX   = (2),
-    RCX   = (3),
-    RDX   = (4),
     CPU_VERSION     = (9),
     NUM_OF_REGS     = (4),
     NUM_OF_COMMANDS = (11),
@@ -115,26 +112,29 @@ enum FUNC_CODES{
     RPOP            = SINGLE_BIT(3),
     IMREG_BIT       = (0b10000000u),
     REGISTER_BITS   = (0b01100000u),
-    COMMAND_BITS    = (0b00011111u),
+    COMMAND_BITS    = (0b00011111u)
 };
 
+#define MASK_LOWER(bits) ((1U << (bits)) - 1)
+
 enum BIT_FUNC_CODES{
-    BPUSH  = (0b00000001),
-    BPOP   = (0b00000100),
-    BDIV   = (0b00000010),
-    BSUB   = (0b00000011),
-    BOUT   = (0b00000101),
-    BIN    = (0b00000110),
-    BMUL   = (0b00000111),
-    BADD   = (0b00001001),
-    BSQRT  = (0b00001000),
-    BHLT   = (0b11111111),
+    PUSH   = (0b00000001),
+    POP    = (0b00000100),
+    DIV    = (0b00000010),
+    SUB    = (0b00000011),
+    OUT    = (0b00000101),
+    IN     = (0b00000110),
+    MUL    = (0b00000111),
+    ADD    = (0b00001001),
+    SQRT   = (0b00001000),
+    HLT    = (0b11111111),
     JMPFLG = (0b11111110),
-    BRAX   = (0b00000000),
-    BRBX   = (0b00100000),
-    BRCX   = (0b01000000),
-    BRDX   = (0b01100000),
-    BJMP   = (0b00001010)
+    RAX    = (0b00000000),
+    RBX    = (0b00100000),
+    RCX    = (0b01000000),
+    RDX    = (0b01100000),
+    JMP    = (0b00001010),
+    JB     = (0b00001011)
 };
 
 int read_from_file(const char* filename, MyFileStruct *FileStruct, FILE* logfile);
@@ -154,3 +154,5 @@ uint32_t CpuDump(Processor *cpu, FILE* logfile);
 int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile);
 
 unsigned char* read_from_bin_file(const char* filename, FILE* logfile);
+
+int simple_pointer_search(MyPointer *pointers, char *name, int pointers_counter);

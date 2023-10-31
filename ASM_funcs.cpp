@@ -32,19 +32,29 @@ int read_from_file(const char* filename, MyFileStruct* FileStruct, FILE* logfile
     return 0;
 }
 
+int simple_pointer_search(MyPointer *pointers, char *name, int pointers_counter){
+
+    for(int i = 0; i < pointers_counter; i++){
+        printf("i = %d\n", i);
+        if(!strcmp(pointers[i].name, name)){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile){
     char* buff = FileStruct->buff, *ref_buff = FileStruct->buff;
-    size_t line_counter = 0, len = 0, binary_pos_counter = 0; /*pointers_counter = 0;*/
-    int int_arg = VM_POISON, pointers[CPU_CS_SIZE] = {};
+    size_t line_counter = 0, len = 0, binary_pos_counter = 0, pointers_counter = 0;
+    int int_arg = VM_POISON;
+    MyPointer pointers[CPU_CS_SIZE] = {};
     bool silent_arg = false;
-    char curr_command[INIT_LEN] = {}, curr_arg[INIT_LEN] = {}, output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {};
+    char curr_command[MAX_POINTERNAME_LEN] = {}, curr_arg[MAX_POINTERNAME_LEN] = {},
+         output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {};
 
     unsigned char opcode = (char)0u;
     unsigned char *char_binary_code = nullptr;
-
-    for(size_t i = 0; i < CPU_CS_SIZE; i++){
-        pointers[i] = -1;
-    }
 
 
     fprintf(logfile, "Initial buff:\n%s\n", buff);
@@ -61,10 +71,11 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     char_binary_code[binary_pos_counter++] = (char)NUM_OF_COMMANDS;
 
     while(buff[1]){
-        opcode = (char)0;
-        // while(!isalpha(*buff) && (*buff != ':')) buff++;
+        opcode = 0;
 
-        if(sscanf(buff, "%4s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
+        POINTERS_DUMP(pointers, pointers_counter);
+
+        if(sscanf(buff, "%s%n", curr_command, &len) == 0){         // 4 == STRINGIFY(INIT_LEN - 1)
             printf("\033[1;31mError\033[0m: Unknown command at %zu line. \nExiting...\n", line_counter + 1);
             return -1;
         }
@@ -72,18 +83,29 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         buff += len;
         fprintf(logfile, "\nCommand: %s, buff:%s\n", curr_command, buff);
 
-        if(*buff == '\n' || sscanf(buff, "%s", curr_arg) == 0 || *buff == '\0'){
+        if(*buff == '\n' || sscanf(buff, "%s%n", curr_arg, &len) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
             silent_arg = true;
         }
 
-        if(curr_command[1] == ':' && curr_command[0] - '9' <= 0 && curr_command[0] - '0' >= 0){
+        if(curr_command[len - 1] == ':'){
             CHECKPOINT("HERE!!!");
-            printf("curr_command: %s, atoi(curr_command): %d\n", curr_command, atoi(curr_command));
-            pointers[atoi(curr_command)] = (int)line_counter;
-            fprintf(logfile, "Processed as :%d – read: %s\n", atoi(curr_command), curr_command);
-            printf("Written: %d\n", pointers[atoi(curr_command)]);
+            printf("curr_command: %s, pointers_counter = %zu\n", curr_command, pointers_counter);
+            curr_command[len - 1] = '\0';
+            pointers[pointers_counter].address = (int)line_counter;
+            strcpy(pointers[pointers_counter].name, curr_command);
+            pointers_counter++;
             line_counter++;
+
+            printf("Written: (%s, %zu) \n", pointers[pointers_counter - 1].name,
+            pointers[pointers_counter - 1].address);
+
+
+            printf("pointers:\n");
+            for(size_t i = 0; i < pointers_counter; i++){
+                printf("(%s, %3zd)\n", pointers[i].name, pointers[i].address);
+            }
+
             SKIP_STR();
             silent_arg = false;
             continue;
@@ -93,11 +115,12 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
         CHECKPOINT("first check");
 
-        printf("curr command: %s\n", curr_command);
+        printf("curr command: %s, Silentness: %d\n", curr_command, silent_arg);
 
-        BITWISE_COMPARE_ASM(curr_command, "push", BPUSH, opcode);
-        BITWISE_COMPARE_ASM(curr_command, "pop", BPOP, opcode);
-        BITWISE_COMPARE_ASM(curr_command, "jmp", BJMP, opcode);
+        BITWISE_COMPARE_ASM(curr_command, "push", PUSH, opcode);
+        BITWISE_COMPARE_ASM(curr_command, "pop",  POP,  opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jmp",  JMP,  opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jb",  JB,  opcode)
 
         if((opcode & COMMAND_BITS) != 0u){
 
@@ -109,14 +132,14 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             }
 
 
-            if(curr_arg[0] == 'r' && curr_arg[2] == 'x' && abs(curr_arg[1] - 'a') <= 3){
+            if(curr_arg[0] == 'r' && curr_arg[2] == 'x' && abs(curr_arg[1] - 'a') <= NUM_OF_REGS - 1){
                 fprintf(logfile, "curr arg: %s, register case.\n", curr_arg);
                 printf("Curr arg: %s, register case\n", curr_arg);
 
-                BITWISE_COMPARE_ASM(curr_arg, "rax", BRAX, opcode);
-                BITWISE_COMPARE_ASM(curr_arg, "rbx", BRBX, opcode);
-                BITWISE_COMPARE_ASM(curr_arg, "rcx", BRCX, opcode);
-                BITWISE_COMPARE_ASM(curr_arg, "rdx", BRDX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rax", RAX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rbx", RBX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rcx", RCX, opcode);
+                BITWISE_COMPARE_ASM(curr_arg, "rdx", RDX, opcode);
 
                 printf("opcode after regs is %d\n", opcode);
                 fprintf(logfile, "opcode after regs is %d\n", opcode);
@@ -129,38 +152,41 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 fprintf(logfile, "full opcode after regs is %d\n", opcode);
 
             }else{
-                if(sscanf(curr_arg, "%d", &int_arg) != 1 && curr_arg[0] != ':'){
+                printf("curr_arg = %s, len = %zu\n", curr_arg, len);
+                if(sscanf(curr_arg, "%d", &int_arg) != 1 && curr_arg[len - 2] != ':'){
                     printf("\033[1;31mError\033[0m: Bad argument at %zu line.\nExiting...\n", line_counter + 1);
                     return -1;
                 }
                 CHECKPOINT("IMREG_BIT");
                 opcode &= ~IMREG_BIT;
                 char_binary_code[binary_pos_counter++] = opcode;
-                if(opcode == BPUSH){
+                if(opcode == PUSH){
                     WRITE_INT(binary_pos_counter, int_arg);
-                    binary_pos_counter+=4;
+                    binary_pos_counter += sizeof(int);
                 }
             }
 
             printf("\033[1;36mOpcode\033[0m: %d\n", opcode);
-            if(opcode == BJMP){
-                CHECKPOINT("BMJP, ");
+            if(opcode == JMP || opcode == JB){
+                CHECKPOINT("BMJP || JB, ");
+                if(opcode == JB) printf("(JB)\n");
                 printf("opcode: %d\n", opcode);
                 WRITE_INT(binary_pos_counter, JMPFLG);
-                binary_pos_counter+=4;
+                binary_pos_counter += sizeof(int);
             }
+
         }
         else{
             CHECKPOINT("after regs");
             printf("FPU after regs: %d\n", opcode);
             fprintf(logfile, "FPU after regs: %d\n", opcode);
 
-            BITWISE_COMPARE_ASM(curr_command, "div", BDIV, opcode);
-            BITWISE_COMPARE_ASM(curr_command, "sub", BSUB, opcode);
-            BITWISE_COMPARE_ASM(curr_command, "out", BOUT, opcode);
-            BITWISE_COMPARE_ASM(curr_command, "hlt", BHLT, opcode);
-            BITWISE_COMPARE_ASM(curr_command, "in",  BIN, opcode);
-            BITWISE_COMPARE_ASM(curr_command, "mul", BMUL, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "div", DIV, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "sub", SUB, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "out", OUT, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "hlt", HLT, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "in",  IN, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "mul", MUL, opcode);
 
             char_binary_code[binary_pos_counter++] = opcode;
 
@@ -192,56 +218,59 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     }
 
 
+
     printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
     for(size_t i = 0; i < binary_pos_counter; i++){
         printf("%3d ", char_binary_code[i]);
     }
     printf("\n");
 
+    POINTERS_DUMP(pointers, pointers_counter);
+
     buff = ref_buff;
 
     for(int i = 3; buff[1];){
-        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[1] != ':'){
+        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[len - 2] != ':' && curr_command[1] != ':'){      // ???
+            CHECKPOINT("DA YA DAUNICH))");
             i++;
         }
 
-        printf("\ncurr_command: %s, len = %zu, i = %d\n", curr_command, len, i);
         buff += len;
+        if(sscanf(buff, "%d", &int_arg)){
+            i += sizeof(int) - 1;
+        }
+
+        printf("curr_command: %s, len = %zu, i = %d\n\n", curr_command, len, i);
 
         if(*buff == ' '){
             printf("yep.");
-            if(!strcmp(curr_command, "jmp")){
+            if(!strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp")){
                 buff++;
 
-                if(sscanf(buff, "%d", &int_arg) < 1 || int_arg < 0 || int_arg > 10){
-                    printf("\033[1;31mError\033[0m: Wrong pointer for jmp.\n");
+                if(sscanf(buff, "%s%n:", curr_arg, &len) <= 0){
+                    printf("\033[1;31mError\033[0m: Wrong pointer for jb.\n");
                     return -1;
                 }
 
-                printf("curr_arg:%s, pointers[%d] = %d, i = %d\n", curr_arg, int_arg, pointers[int_arg], i);
-                WRITE_INT(i, pointers[int_arg] + 3);
-                i+=4;
+                printf("\ncurr_arg: %s, len = %zu, i = %d\n", curr_arg, len, i);
+                curr_arg[len - 1] = '\0';
+                int_arg = simple_pointer_search(pointers, curr_arg, pointers_counter);
+                if(int_arg == -1){
+                    printf("\033[1;31mError\033[0m: No such pointer was found for jb.\nExiting...\n");
+                    return -1;
+                }
+                WRITE_INT(i, pointers[int_arg].address + 3);            // +3 for signature
+                i += sizeof(int);
             }
             buff++;
-
-            if(sscanf(buff, "%d", &int_arg)){
-                i+=4;
-            }
 
             SKIP_STR();
         }
     }
 
-
-
-    printf("pointers:\n");
-    for(size_t i = 0; i < binary_pos_counter; i++){
-        printf("%3d", pointers[i]);
-    }
-
     printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
     for(size_t i = 0; i < binary_pos_counter; i++){
-        printf("%3d ", char_binary_code[i]);
+        printf("%3hhu ", char_binary_code[i]);
     }
 
 
