@@ -16,6 +16,8 @@
 
 #define MAX_POINTERNAME_LEN 128
 
+#define STDOUT_LINE_LEN 150
+
 struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
@@ -75,12 +77,12 @@ struct MyPointer{
 #define SKIP_STR() do{ while(*buff != '\n' && *buff != '\0') buff++;                                                  \
                         buff++;  } while(0)                                                                           \
 
-#define REG_ASSIGN(cpu, logfile, register_name, register_code, value)                     case register_code:         \
-                        cpu->register_name = value;                                                                   \
+#define REG_ASSIGN(cpu, logfile, register_code, value)                     case register_code:                        \
+                        cpu->register_code = value;                                                                   \
                         break;                                                                                        \
 
-#define PUSH_FR_REG(stk, logfile, register_name, register_code)                     case register_code:               \
-                        StackPush(stk, logfile, cpu->register_name);                                                  \
+#define PUSH_FR_REG(stk, logfile, register_code)                     case register_code:                              \
+                        StackPush(stk, logfile, cpu->register_code);                                                  \
                         break;                                                                                        \
 
 #define COPY_FR_REG(register, register_name, out_str)                     case register_name:                         \
@@ -100,6 +102,19 @@ struct MyPointer{
         for(size_t i = 0; i < pointers_counter; i++){                                                                 \
             printf("(%s, %3zd)\n", pointers[i].name, pointers[i].address);                                            \
         } }while(0)
+
+#define BEAUTY_BIN_DUMP(message) do{        printf(message ": command: %s, i = %d\n", curr_command, i);               \
+        for(size_t j = 0; j <= binary_pos_counter; j++){                                                              \
+            printf("%4d", char_binary_code[j]);                                                                      \
+        }                                                                                                             \
+        printf("\n");                                                                                                 \
+        for(int k = 0; k < i; k++){                                                                                   \
+            if(k - i == 1) printf("   ");                                                                             \
+            else printf("    ");                                                                                      \
+        }                                                                                                             \
+        printf("   \033[1;34m^\033[0m\n"); }while(0)
+
+#define STRIKE_ME_OUT() do{ for(size_t trash = 0; trash < STDOUT_LINE_LEN; trash++) printf("–"); }while(0)            \
 
 
 enum FUNC_CODES{

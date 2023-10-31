@@ -1,9 +1,21 @@
-4:
+in
+pop rbx
+push 0
+push rbx
+aboba:
 in
 pop rax
 push rax
 push rax
 mul
 out
-jmp 4:
+push 1
+sub
+pop rbx
+pop rax
+push rax
+push rbx
+push rax
+push rbx
+jb aboba:
 hlt

@@ -85,6 +85,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
         if(*buff == '\n' || sscanf(buff, "%s%n", curr_arg, &len) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
+            fprintf(stdout, "Failed to read argument!\n");
             silent_arg = true;
         }
 
@@ -92,7 +93,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             CHECKPOINT("HERE!!!");
             printf("curr_command: %s, pointers_counter = %zu\n", curr_command, pointers_counter);
             curr_command[len - 1] = '\0';
-            pointers[pointers_counter].address = (int)line_counter;
+            pointers[pointers_counter].address = (int)binary_pos_counter;
             strcpy(pointers[pointers_counter].name, curr_command);
             pointers_counter++;
             line_counter++;
@@ -112,6 +113,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         }
 
         fprintf(logfile, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
+        fprintf(stdout, "curr_command = %s, curr_arg = %s, Silentness = %d\n", curr_command, curr_arg, silent_arg);
 
         CHECKPOINT("first check");
 
@@ -161,6 +163,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 opcode &= ~IMREG_BIT;
                 char_binary_code[binary_pos_counter++] = opcode;
                 if(opcode == PUSH){
+                    printf("My intarg is %d\n", int_arg);
                     WRITE_INT(binary_pos_counter, int_arg);
                     binary_pos_counter += sizeof(int);
                 }
@@ -187,6 +190,8 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             BITWISE_COMPARE_ASM(curr_command, "hlt", HLT, opcode);
             BITWISE_COMPARE_ASM(curr_command, "in",  IN, opcode);
             BITWISE_COMPARE_ASM(curr_command, "mul", MUL, opcode);
+            BITWISE_COMPARE_ASM(curr_command, "add", ADD, opcode);
+
 
             char_binary_code[binary_pos_counter++] = opcode;
 
@@ -228,23 +233,34 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     POINTERS_DUMP(pointers, pointers_counter);
 
     buff = ref_buff;
+    strcpy(curr_command, "");
+
+    STRIKE_ME_OUT();
+    printf("\n");
+    STRIKE_ME_OUT();
+    printf("\n");
+
 
     for(int i = 3; buff[1];){
-        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[len - 2] != ':' && curr_command[1] != ':'){      // ???
-            CHECKPOINT("DA YA DAUNICH))");
+        BEAUTY_BIN_DUMP("Previous");
+
+        if(sscanf(buff, "%s%n", curr_command, &len) && curr_command[len - 2] != ':' && curr_command[len - 1] != ':'){
+            // ???
+            // CHECKPOINT("DA YA DAUNICH))");
             i++;
         }
 
+
         buff += len;
         if(sscanf(buff, "%d", &int_arg)){
-            i += sizeof(int) - 1;
+            i += sizeof(int);
         }
 
-        printf("curr_command: %s, len = %zu, i = %d\n\n", curr_command, len, i);
+        // printf("curr_command: %s, len = %zu, i = %d\n\n", curr_command, len, i);
 
         if(*buff == ' '){
-            printf("yep.");
             if(!strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp")){
+                printf("yep.");
                 buff++;
 
                 if(sscanf(buff, "%s%n:", curr_arg, &len) <= 0){
@@ -253,19 +269,24 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 }
 
                 printf("\ncurr_arg: %s, len = %zu, i = %d\n", curr_arg, len, i);
+
                 curr_arg[len - 1] = '\0';
                 int_arg = simple_pointer_search(pointers, curr_arg, pointers_counter);
+
                 if(int_arg == -1){
                     printf("\033[1;31mError\033[0m: No such pointer was found for jb.\nExiting...\n");
                     return -1;
                 }
-                WRITE_INT(i, pointers[int_arg].address + 3);            // +3 for signature
+                WRITE_INT(i, pointers[int_arg].address);
                 i += sizeof(int);
             }
             buff++;
 
             SKIP_STR();
         }
+        BEAUTY_BIN_DUMP("After");
+        STRIKE_ME_OUT();
+        printf("\n\n\n");
     }
 
     printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
