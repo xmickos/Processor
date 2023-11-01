@@ -60,6 +60,7 @@ unsigned char* read_from_bin_file(const char* filename, FILE* logfile){
     buff[read_size] = COMMAND_BITS;
 
     printf("buff[size] = %d\n", buff[size]);
+    printf("Init buff:\n%s\n", buff);
 
     fclose(input_file);
     return buff;
@@ -151,52 +152,13 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 printf("\033[1;34mREGS\033[0m: %f %f %f %f\n", cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX);
 
                 break;
-            case JMP:
-                int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
-                printf("int_arg = %d\n", int_arg);
-                if(int_arg < 0){
-                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
-                    return -1;
-                }
-
-                cpu->programm_counter = (size_t)int_arg;
-
-                #ifdef DEBUG
-                printf("\033[1;32mCase Jump\033[0m\n");
-                printf("int_arg = %d\n", int_arg);
-                fprintf(logfile, "Case Jump\n");
-                fprintf(logfile, "int_arg = %d\n", int_arg);
-                #endif
-
-                break;
-            case JB:
-                int_arg = *(int *)(cpu->cs + cpu->programm_counter); // TODO: to define
-                printf("int_arg = %d\n", int_arg);
-                if(int_arg < 0){
-                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
-                    return -1;
-                }
-
-                #ifdef DEBUG
-                printf("\033[1;32mCase Jump\033[0m\n");
-                printf("int_arg = %d\n", int_arg);
-                fprintf(logfile, "Case Jump\n");
-                fprintf(logfile, "int_arg = %d\n", int_arg);
-                #endif
-
-                if(StackPop(stk, logfile, &second_operand)){
-                    printf("Bad second pop!\n");
-                }
-                if(StackPop(stk, logfile, &first_operand)){
-                    printf("Bad first pop!\n");
-                }
-
-                if(first_operand < second_operand){
-                    cpu->programm_counter = (size_t)int_arg;
-                }else{
-                    cpu->programm_counter += sizeof(int);
-                }
-                break;
+            MAKE_COND_JMP("JMP", =, JMP);
+            MAKE_COND_JMP("JB", <, JB);
+            MAKE_COND_JMP("JA", >, JA);
+            MAKE_COND_JMP("JAE", >=, JAE);
+            MAKE_COND_JMP("JBE", >=, JBE);
+            MAKE_COND_JMP("JE", ==, JE);
+            MAKE_COND_JMP("JNE", !=, JNE);
             case DIV:
                 #ifdef DEBUG
                 printf("\033[1;32mCase DIV\033[0m\n");
@@ -225,10 +187,10 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 fprintf(logfile, "Case SUB\n");
                 #endif
 
-                if(StackPop(stk, logfile, &second_operand)){
+                if(StackPop(stk, logfile, &first_operand)){
                     printf("Bad second pop!\n");
                 }
-                if(StackPop(stk, logfile, &first_operand)){
+                if(StackPop(stk, logfile, &second_operand)){
                     printf("Bad first pop!\n");
                 }
 

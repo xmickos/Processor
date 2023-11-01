@@ -105,7 +105,7 @@ struct MyPointer{
 
 #define BEAUTY_BIN_DUMP(message) do{        printf(message ": command: %s, i = %d\n", curr_command, i);               \
         for(size_t j = 0; j <= binary_pos_counter; j++){                                                              \
-            printf("%4d", char_binary_code[j]);                                                                      \
+            printf("%4d", char_binary_code[j]);                                                                       \
         }                                                                                                             \
         printf("\n");                                                                                                 \
         for(int k = 0; k < i; k++){                                                                                   \
@@ -114,13 +114,49 @@ struct MyPointer{
         }                                                                                                             \
         printf("   \033[1;34m^\033[0m\n"); }while(0)
 
-#define STRIKE_ME_OUT() do{ for(size_t trash = 0; trash < STDOUT_LINE_LEN; trash++) printf("–"); }while(0)            \
+#define STRIKE_ME_OUT() do{ for(size_t trash = 0; trash < STDOUT_LINE_LEN; trash++) printf("–"); }while(0)
+
+#define MAKE_COND_JMP(name, operand, binary_code) case binary_code:                                                   \
+                int_arg = *(int *)(cpu->cs + cpu->programm_counter);                                                  \
+                printf("int_arg = %d\n", int_arg);                                                                    \
+                if(int_arg < 0){                                                                                      \
+                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");                                     \
+                    return -1;                                                                                        \
+                }                                                                                                     \
+                                                                                                                      \
+                printf("\033[1;32mCase " name "\033[0m\n");                                                           \
+                printf("int_arg = %d\n", int_arg);                                                                    \
+                fprintf(logfile, "Case " name "\n");                                                                  \
+                fprintf(logfile, "int_arg = %d\n", int_arg);                                                          \
+                if(StackPop(stk, logfile, &second_operand)){                                                          \
+                    printf("Bad second pop!\n");                                                                      \
+                }                                                                                                     \
+                if(StackPop(stk, logfile, &first_operand)){                                                           \
+                    printf("Bad first pop!\n");                                                                       \
+                }                                                                                                     \
+                                                                                                                      \
+                if(first_operand operand second_operand){                                                             \
+                    printf("Yes!\n");                                                                                 \
+                    cpu->programm_counter = (size_t)int_arg;                                                          \
+                }else{                                                                                                \
+                    printf("No!\n");                                                                                  \
+                    cpu->programm_counter += sizeof(int);                                                             \
+                }                                                                                                     \
+                break;                                                                                                \
+
+#define OPCODE_CASE(bit_command) case bit_command:                                                                    \
+                    printf("\nJB case.\n");                                                                           \
+                    break;                                                                                            \
+
+#define IS_JUMP(curr_command) !strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp") ||                          \
+ !strcmp(curr_command, "ja") || !strcmp(curr_command, "jae") || !strcmp(curr_command, "jbe") ||                       \
+ !strcmp(curr_command, "je") || !strcmp(curr_command, "jne")                                                          \
 
 
 enum FUNC_CODES{
-    CPU_VERSION     = (9),
+    CPU_VERSION     = (10),
     NUM_OF_REGS     = (4),
-    NUM_OF_COMMANDS = (11),
+    NUM_OF_COMMANDS = (17),
     CPU_CS_SIZE     = (128),
     CPU_INIT_CAP    = (10),
     REGISTER_BIT    = SINGLE_BIT(7),
@@ -134,22 +170,27 @@ enum FUNC_CODES{
 
 enum BIT_FUNC_CODES{
     PUSH   = (0b00000001),
-    POP    = (0b00000100),
     DIV    = (0b00000010),
     SUB    = (0b00000011),
+    POP    = (0b00000100),
     OUT    = (0b00000101),
     IN     = (0b00000110),
     MUL    = (0b00000111),
-    ADD    = (0b00001001),
     SQRT   = (0b00001000),
+    ADD    = (0b00001001),
+    JMP    = (0b00001010),
+    JB     = (0b00001011),
+    JA     = (0b00001100),
+    JAE    = (0b00001101),
+    JBE    = (0b00001110),
+    JE     = (0b00001111),
+    JNE    = (0b00010000),
     HLT    = (0b11111111),
     JMPFLG = (0b11111110),
     RAX    = (0b00000000),
     RBX    = (0b00100000),
     RCX    = (0b01000000),
     RDX    = (0b01100000),
-    JMP    = (0b00001010),
-    JB     = (0b00001011)
 };
 
 int read_from_file(const char* filename, MyFileStruct *FileStruct, FILE* logfile);

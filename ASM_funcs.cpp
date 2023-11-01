@@ -62,9 +62,12 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
     sprintf(version, "Current signature: VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
     fputs(version, output);
 
-    char_binary_code = (unsigned char*)calloc(2 * (FileStruct->num_of_str) + 4, sizeof(char));
+    char_binary_code = (unsigned char*)calloc(5 * (FileStruct->num_of_str) + 4, sizeof(char));
 
-    // + 4 = 1 + cpu_version + num_of_regs + command_count
+    /*               Estimation logic:
+    Each line of user code may require no more than 5 bytes of
+    binary code, three more will be spent on the signature.
+    */
 
     char_binary_code[binary_pos_counter++] = (char)CPU_VERSION;
     char_binary_code[binary_pos_counter++] = (char)NUM_OF_REGS;
@@ -122,7 +125,12 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         BITWISE_COMPARE_ASM(curr_command, "push", PUSH, opcode);
         BITWISE_COMPARE_ASM(curr_command, "pop",  POP,  opcode);
         BITWISE_COMPARE_ASM(curr_command, "jmp",  JMP,  opcode);
-        BITWISE_COMPARE_ASM(curr_command, "jb",  JB,  opcode)
+        BITWISE_COMPARE_ASM(curr_command, "jb",   JB,   opcode);
+        BITWISE_COMPARE_ASM(curr_command, "ja",   JA,   opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jae",  JAE,  opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jbe",  JBE,  opcode);
+        BITWISE_COMPARE_ASM(curr_command, "je",   JE,   opcode);
+        BITWISE_COMPARE_ASM(curr_command, "jne",  JNE,  opcode);
 
         if((opcode & COMMAND_BITS) != 0u){
 
@@ -170,9 +178,16 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             }
 
             printf("\033[1;36mOpcode\033[0m: %d\n", opcode);
-            if(opcode == JMP || opcode == JB){
+            if((opcode & COMMAND_BITS) >= JMP && (opcode & COMMAND_BITS) <= JNE){
                 CHECKPOINT("BMJP || JB, ");
-                if(opcode == JB) printf("(JB)\n");
+                switch (opcode & COMMAND_BITS){
+                OPCODE_CASE(JB);
+                OPCODE_CASE(JA);
+                OPCODE_CASE(JAE);
+                OPCODE_CASE(JBE);
+                OPCODE_CASE(JE);
+                OPCODE_CASE(JNE);
+                }
                 printf("opcode: %d\n", opcode);
                 WRITE_INT(binary_pos_counter, JMPFLG);
                 binary_pos_counter += sizeof(int);
@@ -259,7 +274,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         // printf("curr_command: %s, len = %zu, i = %d\n\n", curr_command, len, i);
 
         if(*buff == ' '){
-            if(!strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp")){
+            if(IS_JUMP(curr_command)){
                 printf("yep.");
                 buff++;
 

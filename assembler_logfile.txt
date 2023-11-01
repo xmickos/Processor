@@ -1,8 +1,6 @@
 Initial buff:
 in
 pop rbx
-push 0
-push rbx
 aboba:
 in
 pop rax
@@ -10,22 +8,18 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: in, buff:
 pop rbx
-push 0
-push rbx
 aboba:
 in
 pop rax
@@ -33,15 +27,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
@@ -53,8 +45,6 @@ FPU after all: 6
 Checkpoint After all command compares.
 New buff:
 pop rbx
-push 0
-push rbx
 aboba:
 in
 pop rax
@@ -62,21 +52,17 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: pop, buff: rbx
-push 0
-push rbx
 aboba:
 in
 pop rax
@@ -84,15 +70,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = pop, curr_arg = rbx, Silentness = 0
@@ -101,96 +85,6 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 36
 full opcode after regs is 164
-New buff:push 0
-push rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 1
-sub
-pop rbx
-pop rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-
-Command: push, buff: 0
-push rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 1
-sub
-pop rbx
-pop rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-curr_command = push, curr_arg = 0, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-Checkpoint IMREG_BIT
-New buff:push rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 1
-sub
-pop rbx
-pop rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-
-Command: push, buff: rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 1
-sub
-pop rbx
-pop rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-curr_command = push, curr_arg = rbx, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rbx, register case.
-opcode after regs is 33
-full opcode after regs is 161
 New buff:aboba:
 in
 pop rax
@@ -198,15 +92,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
@@ -217,15 +109,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
@@ -237,15 +127,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
@@ -261,15 +149,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
@@ -278,15 +164,13 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = pop, curr_arg = rax, Silentness = 0
@@ -299,15 +183,13 @@ New buff:push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
@@ -315,15 +197,13 @@ Command: push, buff: rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = push, curr_arg = rax, Silentness = 0
@@ -335,30 +215,26 @@ full opcode after regs is 129
 New buff:push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: push, buff: rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = push, curr_arg = rax, Silentness = 0
@@ -369,29 +245,25 @@ opcode after regs is 1
 full opcode after regs is 129
 New buff:mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: mul, buff:
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
@@ -403,28 +275,24 @@ FPU after all: 7
 Checkpoint After all command compares.
 New buff:
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: out, buff:
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
@@ -435,56 +303,86 @@ FPU after regs: 0
 FPU after all: 5
 Checkpoint After all command compares.
 New buff:
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
+je aboba:
+hlt
+
+
+Command: push, buff: 0
+push 1
 push rbx
-jb aboba:
+sub
+pop rbx
+push rbx
+je aboba:
+hlt
+
+curr_command = push, curr_arg = 0, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:push 1
+push rbx
+sub
+pop rbx
+push rbx
+je aboba:
 hlt
 
 
 Command: push, buff: 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = push, curr_arg = 1, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT
+New buff:push rbx
+sub
+pop rbx
+push rbx
+je aboba:
+hlt
+
+
+Command: push, buff: rbx
+sub
+pop rbx
+push rbx
+je aboba:
+hlt
+
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
 New buff:sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: sub, buff:
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 Failed to read argument!
-curr_command = sub, curr_arg = 1, Silentness = 1
+curr_command = sub, curr_arg = rbx, Silentness = 1
 Checkpoint first check
 Checkpoint after regs
 FPU after regs: 0
@@ -492,22 +390,14 @@ FPU after all: 3
 Checkpoint After all command compares.
 New buff:
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: pop, buff: rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = pop, curr_arg = rbx, Silentness = 0
@@ -516,61 +406,13 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 36
 full opcode after regs is 164
-New buff:pop rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-
-Command: pop, buff: rax
-push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-curr_command = pop, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 4
-full opcode after regs is 132
-New buff:push rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-
-Command: push, buff: rax
-push rbx
-push rax
-push rbx
-jb aboba:
-hlt
-
-curr_command = push, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
 New buff:push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 
 Command: push, buff: rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
 
 curr_command = push, curr_arg = rbx, Silentness = 0
@@ -579,46 +421,14 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 33
 full opcode after regs is 161
-New buff:push rax
-push rbx
-jb aboba:
+New buff:je aboba:
 hlt
 
 
-Command: push, buff: rax
-push rbx
-jb aboba:
+Command: je, buff: aboba:
 hlt
 
-curr_command = push, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
-New buff:push rbx
-jb aboba:
-hlt
-
-
-Command: push, buff: rbx
-jb aboba:
-hlt
-
-curr_command = push, curr_arg = rbx, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rbx, register case.
-opcode after regs is 33
-full opcode after regs is 161
-New buff:jb aboba:
-hlt
-
-
-Command: jb, buff: aboba:
-hlt
-
-curr_command = jb, curr_arg = aboba:, Silentness = 0
+curr_command = je, curr_arg = aboba:, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT

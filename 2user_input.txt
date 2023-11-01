@@ -1,7 +1,5 @@
 in
 pop rbx
-push 0
-push rbx
 aboba:
 in
 pop rax
@@ -9,13 +7,11 @@ push rax
 push rax
 mul
 out
+push 0
 push 1
+push rbx
 sub
 pop rbx
-pop rax
-push rax
 push rbx
-push rax
-push rbx
-jb aboba:
+je aboba:
 hlt
