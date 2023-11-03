@@ -118,7 +118,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         printf("curr_command[len - 1] == curr_command[%zu] == %c\ncurr_command[len - 2] == curr_command[%zu] == %c\n", len - 1,
         curr_command[len - 1], len - 2, curr_command[len - 2]);
 
-        if(curr_command[len - 1] == ':' || curr_command[len - 2] == ':'){       // КАМИЛЬ ЧЁ ЗА ХУЙНЯ С НИМ ОН МЕНЯ ЗАЕБАЛ
+        if(curr_command[len - 1] == ':' || curr_command[len - 2] == ':'){
             CHECKPOINT("HERE!!!");
             printf("curr_command: %s, pointers_counter = %zu\n", curr_command, pointers_counter);
             curr_command[len - 1] = '\0';

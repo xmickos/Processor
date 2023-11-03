@@ -1,41 +1,57 @@
-Initial buff:
+Initial buff:{
 in
-pop rbx
-aboba:
 in
-pop rax
+in
+call DiscR:
 push rax
-push rax
-mul
 out
-push 0
-push 1
-push rbx
-sub
+eom
+
+DiscR:
+
+pop rax
 pop rbx
+pop rcx
 push rbx
-je aboba:
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+Command: in, len = 2, buff:{
+in
+in
+call DiscR:
+push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
-
-Command: in, buff:
-pop rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
+	}
 Failed to read argument!
 curr_command = in, curr_arg = , Silentness = 1
 Checkpoint first check
@@ -43,407 +59,766 @@ Checkpoint after regs
 FPU after regs: 0
 FPU after all: 6
 Checkpoint After all command compares.
-New buff:
-pop rbx
-aboba:
+
+New buff:{
 in
-pop rax
+in
+call DiscR:
 push rax
-push rax
-mul
 out
-push 0
-push 1
-push rbx
-sub
+eom
+
+DiscR:
+
+pop rax
 pop rbx
+pop rcx
 push rbx
-je aboba:
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: in, len = 3, buff:{
+in
+call DiscR:
+push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
-
-Command: pop, buff: rbx
-aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = pop, curr_arg = rbx, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rbx, register case.
-opcode after regs is 36
-full opcode after regs is 164
-New buff:aboba:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: aboba:, buff:
-in
-pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
+	}
 Failed to read argument!
-Checkpoint HERE!!!
-
-Command: in, buff:
-pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-Failed to read argument!
-curr_command = in, curr_arg = rbx, Silentness = 1
+curr_command = in, curr_arg = , Silentness = 1
 Checkpoint first check
 Checkpoint after regs
 FPU after regs: 0
 FPU after all: 6
 Checkpoint After all command compares.
-New buff:
+
+New buff:{
+in
+call DiscR:
+push rax
+out
+eom
+
+DiscR:
+
 pop rax
-push rax
-push rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
 pop rbx
+pop rcx
 push rbx
-je aboba:
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: in, len = 3, buff:{
+call DiscR:
+push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
+	}
+Failed to read argument!
+curr_command = in, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 6
+Checkpoint After all command compares.
 
-Command: pop, buff: rax
+New buff:{
+call DiscR:
 push rax
-push rax
-mul
 out
-push 0
-push 1
-push rbx
-sub
+eom
+
+DiscR:
+
+pop rax
 pop rbx
+pop rcx
 push rbx
-je aboba:
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: call, len = 5, buff:{ DiscR:
+push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
+	}
+curr_command = call, curr_arg = DiscR:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: push, len = 4, buff:{ rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+curr_command = push, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 1
+full opcode after regs is 129
+New buff:{out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: out, len = 3, buff:{
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+Failed to read argument!
+curr_command = out, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 5
+Checkpoint After all command compares.
+
+New buff:{
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: eom, len = 4, buff:{
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+Failed to read argument!
+curr_command = eom, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 253
+Checkpoint After all command compares.
+
+New buff:{
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: DiscR:, len = 8, buff:{
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: pop, len = 4, buff:{ rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
 curr_command = pop, curr_arg = rax, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 curr arg: rax, register case.
 opcode after regs is 4
 full opcode after regs is 132
-New buff:push rax
+New buff:{pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
 push rax
+push rcx
 mul
-out
-push 0
-push 1
-push rbx
+mul
 sub
-pop rbx
-push rbx
-je aboba:
+pop rax
+ret
 hlt
+	}
 
-
-Command: push, buff: rax
+Command: pop, len = 3, buff:{ rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
 push rax
+push rcx
 mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = push, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
-New buff:push rax
 mul
-out
-push 0
-push 1
-push rbx
 sub
-pop rbx
-push rbx
-je aboba:
+pop rax
+ret
 hlt
 
-
-Command: push, buff: rax
-mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = push, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
-New buff:mul
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: mul, buff:
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-Failed to read argument!
-curr_command = mul, curr_arg = rax, Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 7
-Checkpoint After all command compares.
-New buff:
-out
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: out, buff:
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-Failed to read argument!
-curr_command = out, curr_arg = rax, Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 5
-Checkpoint After all command compares.
-New buff:
-push 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: push, buff: 0
-push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = push, curr_arg = 0, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-Checkpoint IMREG_BIT
-New buff:push 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: push, buff: 1
-push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = push, curr_arg = 1, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-Checkpoint IMREG_BIT
-New buff:push rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: push, buff: rbx
-sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-curr_command = push, curr_arg = rbx, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rbx, register case.
-opcode after regs is 33
-full opcode after regs is 161
-New buff:sub
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: sub, buff:
-pop rbx
-push rbx
-je aboba:
-hlt
-
-Failed to read argument!
-curr_command = sub, curr_arg = rbx, Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 3
-Checkpoint After all command compares.
-New buff:
-pop rbx
-push rbx
-je aboba:
-hlt
-
-
-Command: pop, buff: rbx
-push rbx
-je aboba:
-hlt
-
+	}
 curr_command = pop, curr_arg = rbx, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 36
 full opcode after regs is 164
-New buff:push rbx
-je aboba:
+New buff:{pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: pop, len = 3, buff:{ rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
+	}
+curr_command = pop, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 68
+full opcode after regs is 196
+New buff:{push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
 
-Command: push, buff: rbx
-je aboba:
+Command: push, len = 4, buff:{ rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
+	}
 curr_command = push, curr_arg = rbx, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 33
 full opcode after regs is 161
-New buff:je aboba:
+New buff:{push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: push, len = 4, buff:{ rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
 
-Command: je, buff: aboba:
+Command: mul, len = 3, buff:{
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
 hlt
 
-curr_command = je, curr_arg = aboba:, Silentness = 0
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: push, len = 5, buff:{ 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+curr_command = push, curr_arg = 4, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT
-Checkpoint BMJP || JB, 
-New buff:hlt
+New buff:{push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
 
+Command: push, len = 4, buff:{ rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
 
-Command: hlt, buff:
+	}
+curr_command = push, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 1
+full opcode after regs is 129
+New buff:{push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
 
+Command: push, len = 4, buff:{ rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{mul
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: mul, len = 3, buff:{
+mul
+sub
+pop rax
+ret
+hlt
+
+	}
 Failed to read argument!
-curr_command = hlt, curr_arg = aboba:, Silentness = 1
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+mul
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: mul, len = 4, buff:{
+sub
+pop rax
+ret
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+sub
+pop rax
+ret
+hlt
+	}
+
+Command: sub, len = 4, buff:{
+pop rax
+ret
+hlt
+
+	}
+Failed to read argument!
+curr_command = sub, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 3
+Checkpoint After all command compares.
+
+New buff:{
+pop rax
+ret
+hlt
+	}
+
+Command: pop, len = 4, buff:{ rax
+ret
+hlt
+
+	}
+curr_command = pop, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 4
+full opcode after regs is 132
+New buff:{ret
+hlt
+	}
+
+Command: ret, len = 3, buff:{
+hlt
+
+	}
+Failed to read argument!
+curr_command = ret, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+hlt
+	}
+
+Command: hlt, len = 4, buff:{
+
+	}
+Failed to read argument!
+curr_command = hlt, curr_arg = , Silentness = 1
 Checkpoint first check
 Checkpoint after regs
 FPU after regs: 0
 FPU after all: 255
 Checkpoint After all command compares.
-New buff:
 
+New buff:{
+	}
+Checkpoint DA!
+Checkpoint ret case
