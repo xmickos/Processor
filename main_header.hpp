@@ -114,7 +114,8 @@ struct MyPointer{
         }                                                                                                             \
         printf("   \033[1;34m^\033[0m\n"); }while(0)
 
-#define STRIKE_ME_OUT() do{ for(size_t trash = 0; trash < STDOUT_LINE_LEN; trash++) printf("–"); }while(0)
+#define STRIKE_ME_OUT() do{ for(size_t trash = 0; trash < STDOUT_LINE_LEN; trash++) printf("–");                      \
+        printf("\n"); }while(0)
 
 #define MAKE_COND_JMP(name, operand, binary_code) case binary_code:                                                   \
                 int_arg = *(int *)(cpu->cs + cpu->programm_counter);                                                  \
@@ -150,7 +151,11 @@ struct MyPointer{
 
 #define IS_JUMP(curr_command) !strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp") ||                          \
  !strcmp(curr_command, "ja") || !strcmp(curr_command, "jae") || !strcmp(curr_command, "jbe") ||                       \
- !strcmp(curr_command, "je") || !strcmp(curr_command, "jne")                                                          \
+ !strcmp(curr_command, "je") || !strcmp(curr_command, "jne") || !strcmp(curr_command, "call") ||                      \
+ !strcmp(curr_command, "ret")
+
+ #define CLEAR_STR(curr_command)         for(size_t better_call_define = 0; better_call_define < MAX_POINTERNAME_LEN; \
+  better_call_define++) curr_command[better_call_define] = '\0';
 
 
 enum FUNC_CODES{
@@ -178,15 +183,18 @@ enum BIT_FUNC_CODES{
     MUL    = (0b00000111),
     SQRT   = (0b00001000),
     ADD    = (0b00001001),
-    JMP    = (0b00001010),
-    JB     = (0b00001011),
-    JA     = (0b00001100),
-    JAE    = (0b00001101),
-    JBE    = (0b00001110),
-    JE     = (0b00001111),
-    JNE    = (0b00010000),
+    CALL   = (0b00001010),
+    RET    = (0b00001100),
+    JMP    = (0b00001101),
+    JB     = (0b00001110),
+    JA     = (0b00001111),
+    JAE    = (0b00010000),
+    JBE    = (0b00010001),
+    JE     = (0b00010010),
+    JNE    = (0b00010011),
     HLT    = (0b11111111),
     JMPFLG = (0b11111110),
+    EOM    = (0b11111101),      // EOM = End of Main
     RAX    = (0b00000000),
     RBX    = (0b00100000),
     RCX    = (0b01000000),
@@ -212,3 +220,5 @@ int CpuCtor(Processor *cpu, size_t capacity, FILE* logfile);
 unsigned char* read_from_bin_file(const char* filename, FILE* logfile);
 
 int simple_pointer_search(MyPointer *pointers, char *name, int pointers_counter);
+
+bool is_pointer(char* string, size_t len);

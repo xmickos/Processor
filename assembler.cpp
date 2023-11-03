@@ -20,6 +20,12 @@ int main(const int argc, const char** argv){
 
     printf("Readed buff:\n%s", FileStruct.buff);
 
+    char a[250] = "Discr:\n\r\0", q[250] = {};
+    int len = 0;
+    sscanf(a, "%s%n:", q, &len);
+    printf("AAAA %d\n", is_pointer(q, len));
+    printf("Q = %s, len = %d\n", q, len);
+
     string_processing_asm(&FileStruct, output, bin_output, logfile);
 
     free(FileStruct.buff);

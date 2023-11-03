@@ -1,0 +1,25 @@
+in
+in
+in
+call DiscR:
+push rax
+out
+eom
+
+DiscR:
+
+pop rax
+pop rbx
+pop rcx
+push rbx
+push rbx
+mul
+push 4
+push rax
+push rcx
+mul
+mul
+sub
+pop rax
+ret
+hlt

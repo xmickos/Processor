@@ -152,13 +152,45 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 printf("\033[1;34mREGS\033[0m: %f %f %f %f\n", cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX);
 
                 break;
-            MAKE_COND_JMP("JMP", =, JMP);
-            MAKE_COND_JMP("JB", <, JB);
-            MAKE_COND_JMP("JA", >, JA);
+            MAKE_COND_JMP("JMP", =,  JMP);
+            MAKE_COND_JMP("JB",  <,  JB);
+            MAKE_COND_JMP("JA",  >,  JA);
             MAKE_COND_JMP("JAE", >=, JAE);
             MAKE_COND_JMP("JBE", >=, JBE);
-            MAKE_COND_JMP("JE", ==, JE);
+            MAKE_COND_JMP("JE",  ==, JE);
             MAKE_COND_JMP("JNE", !=, JNE);
+            case CALL:
+                int_arg = *(int *)(cpu->cs + cpu->programm_counter);
+                printf("int_arg = %d\n", int_arg);
+                if(int_arg < 0){
+                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
+                    return -1;
+                }
+
+                printf("\033[1;32mCase CALL \033[0m\n");
+                printf("int_arg = %d\n", int_arg);
+                fprintf(logfile, "Case CALL\n");
+                fprintf(logfile, "int_arg = %d\n", int_arg);
+
+                cpu->programm_counter = (size_t)int_arg;
+
+                break;
+            case RET:
+                int_arg = *(int *)(cpu->cs + cpu->programm_counter);
+                printf("int_arg = %d\n", int_arg);
+                if(int_arg < 0){
+                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
+                    return -1;
+                }
+
+                printf("\033[1;32mCase CALL \033[0m\n");
+                printf("int_arg = %d\n", int_arg);
+                fprintf(logfile, "Case CALL\n");
+                fprintf(logfile, "int_arg = %d\n", int_arg);
+
+                cpu->programm_counter = (size_t)int_arg;
+
+                break;
             case DIV:
                 #ifdef DEBUG
                 printf("\033[1;32mCase DIV\033[0m\n");
@@ -242,6 +274,14 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 #endif
 
                 fprintf(stdout, "HALT: exiting...\n");
+                return 0;
+            case (EOM & COMMAND_BITS):
+                #ifdef DEBUG
+                printf("\033[1;32mCase End of Main.\033[0m\n");
+                fprintf(logfile, "Case End of Main\n");
+                #endif
+
+                fprintf(stdout, "End of Main. Exiting...\n");
                 return 0;
         }
 
