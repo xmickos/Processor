@@ -820,5 +820,6 @@ Checkpoint After all command compares.
 
 New buff:{
 	}
+Checkpoint Call case.
 Checkpoint DA!
-Checkpoint ret case
+Checkpoint RET case.

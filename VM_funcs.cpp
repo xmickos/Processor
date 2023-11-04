@@ -226,7 +226,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                     printf("Bad first pop!\n");
                 }
 
-                StackPush(stk, logfile, first_operand - second_operand);
+                StackPush(stk, logfile, second_operand - first_operand);
                 break;
             case IN:
                 #ifdef DEBUG

@@ -57,13 +57,12 @@ bool is_pointer(char* string, size_t len){
 
 int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile){
     char* buff = FileStruct->buff, *ref_buff = FileStruct->buff;
-    size_t line_counter = 0, len = 0, binary_pos_counter = 0, pointers_counter = 0;
+    size_t line_counter = 0, len = 0, binary_pos_counter = 0, pointers_counter = 0, last_call_pos = 0;
     int int_arg = VM_POISON;
     MyPointer pointers[CPU_CS_SIZE] = {};
     bool silent_arg = false;
     char curr_command[MAX_POINTERNAME_LEN] = {}, curr_arg[MAX_POINTERNAME_LEN] = {},
-         output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {}, last_pointer_name[MAX_POINTERNAME_LEN] = {}, ash = '\0';
-    // char trash2[MAX_POINTERNAME_LEN] = {}, one_more_trash[MAX_POINTERNAME_LEN] = {};
+         output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {}, last_pointer_name[MAX_POINTERNAME_LEN] = {};
 
     unsigned char opcode = (char)0u;
     unsigned char *char_binary_code = nullptr;
@@ -289,6 +288,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
 
     for(int i = 3; buff[1];){
+        opcode = 0;
         len = 0;
         CLEAR_STR(curr_command);
         BEAUTY_BIN_DUMP("Previous");
@@ -300,19 +300,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
         printf("!is_pointer(%s, %zu) == %d\n", curr_command, len, !is_pointer(curr_command, len));
 
-        // if(sscanf(buff, "%s", len) > 0){
-        //     printf("\033[1;34m\nPOINTER POINTER POINTER\033[0m");
-        // }
-
         printf("curr_command: %s, len = %zu, i = %d\n\n", curr_command, len, i);
-//
-//         while((curr_command[len - 2] == '\r' || curr_command[len - 2] == '\n' || curr_command[len - 2] == '\0')  && len >= 2){
-//             len--; printf("yep suka\n");
-//         }
-//         printf("\033[1;36m\nNew len is:\033[0m %zu\n", len);
-//         printf("curr_command[len - 2] == curr_command[%zu] == %c == %d\n", len - 2, curr_command[len - 2], (int)curr_command[len -2]);
-//         printf("curr_command[len - 1] == curr_command[%zu] == %c == %d\n", len - 1, curr_command[len - 1], (int)curr_command[len -1]);
-
 
         if(is_pointer(curr_command, len)){
             strcpy(last_pointer_name, curr_command);
@@ -320,20 +308,26 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             printf("curr_command: %s\n", curr_command);
         }
 
-        if(!strcmp(curr_command, "ret")){
-            CHECKPOINT("ret case");
-            // last_pointer_name[len - 1] = '\0';
-            last_pointer_name[strlen(last_pointer_name) - 1] = '\0';
-            printf("last_pointer_name = %s\n", last_pointer_name);
-            int_arg = simple_pointer_search(pointers, last_pointer_name, pointers_counter);
+//         if(!strcmp(curr_command, "ret")){
+//             CHECKPOINT("ret case");
+//             last_pointer_name[strlen(last_pointer_name) - 1] = '\0';
+//             printf("last_pointer_name = %s\n", last_pointer_name);
+//             int_arg = simple_pointer_search(pointers, last_pointer_name, pointers_counter);
+//
+//             if(int_arg == -1){
+//                 printf("\033[1;31mError\033[0m: Error with ret, curr_command = %s.\nExiting...\n", curr_command);
+//                 return -1;
+//             }
+//
+//             WRITE_INT(i, pointers[int_arg].address);
+//             i += sizeof(int);
+//         }
 
-            if(int_arg == -1){
-                printf("\033[1;31mError\033[0m: Error with ret, curr_command = %s.\nExiting...\n", curr_command);
-                return -1;
-            }
-
-            WRITE_INT(i, pointers[int_arg].address);
-            i += sizeof(int);
+        BITWISE_COMPARE_ASM(curr_command, "ret",  RET,  opcode);
+        if(opcode != 0){
+            CHECKPOINT("RET case.");
+            printf("last_call_pos = %zu\n", last_call_pos);
+            WRITE_INT(i, last_call_pos);
         }
 
         buff += len;
@@ -341,10 +335,18 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             i += sizeof(int);
         }
 
-
-
         if(*buff == ' '){
-            if(IS_JUMP(curr_command)){
+            BITWISE_COMPARE_ASM(curr_command, "jmp",  JMP,  opcode);
+            BITWISE_COMPARE_ASM(curr_command, "jb",   JB,   opcode);
+            BITWISE_COMPARE_ASM(curr_command, "ja",   JA,   opcode);
+            BITWISE_COMPARE_ASM(curr_command, "jae",  JAE,  opcode);
+            BITWISE_COMPARE_ASM(curr_command, "jbe",  JBE,  opcode);
+            BITWISE_COMPARE_ASM(curr_command, "je",   JE,   opcode);
+            BITWISE_COMPARE_ASM(curr_command, "jne",  JNE,  opcode);
+            BITWISE_COMPARE_ASM(curr_command, "call", CALL, opcode);
+            printf("bitwised asm code: %d, command: %s\n", opcode, curr_command);
+
+            if(opcode != 0){
                 printf("yep.");
                 buff++;
 
@@ -356,6 +358,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 printf("\ncurr_arg: %s, len = %zu, i = %d\n", curr_arg, len, i);
 
                 curr_arg[len - 1] = '\0';
+
                 int_arg = simple_pointer_search(pointers, curr_arg, pointers_counter);
 
                 if(int_arg == -1){
@@ -363,10 +366,15 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                     return -1;
                 }
 
-                // strcpy(last_pointer_name, pointers[int_arg].name);
-
                 WRITE_INT(i, pointers[int_arg].address);
+
                 i += sizeof(int);
+
+                if(opcode == CALL){
+                    CHECKPOINT("Call case.");
+                    last_call_pos = i;
+                    printf("last_call_pos = %zu\n", last_call_pos);
+                }
             }
             buff++;
 
@@ -393,7 +401,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 }
 
 
-/*     Old processing:
+/*                                      Old processing:
 while(buff[1]){
         if(!isalpha(*buff)) SKIP_STR();
 

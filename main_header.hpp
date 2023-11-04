@@ -34,6 +34,7 @@ struct MyFileStruct{
 struct MyPointer{
     char name[MAX_POINTERNAME_LEN] = {};
     ssize_t address = -1;
+    char bin_code = 0;
 };
 
 #define INIT_LEN 25
