@@ -86,8 +86,9 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
 
     cpu->cs[0] = bin_buff[0];
     cpu->cs[1] = bin_buff[1];
-    for(size_t i = 2; i < CPU_CS_SIZE && bin_buff[i - 1] != HLT; i++){
+    for(size_t i = 2; i < CPU_CS_CAPACITY && bin_buff[i - 1] != HLT; i++){
         cpu->cs[i] = bin_buff[i];
+        cpu->cs_size++;
     }
 
     printf("\t\t\t\033[1;36mSaved buffer:\033[0m\n");
@@ -96,7 +97,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
         printf("%d\n", cpu->cs[j]);
     }
 
-    while(cpu->programm_counter < CPU_CS_SIZE && cpu->cs[cpu->programm_counter - 1] != COMMAND_BITS){
+    while(cpu->programm_counter < CPU_CS_CAPACITY && cpu->cs[cpu->programm_counter - 1] != COMMAND_BITS){
         char_command = cpu->cs[cpu->programm_counter++];
         printf("char_command = %d, pc = %zu\n", char_command, cpu->programm_counter);
 
@@ -114,7 +115,6 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                     #endif
 
                     StackPush(stk, logfile, int_arg);
-                    break;
                 }else{
 
                     #ifdef DEBUG
@@ -131,8 +131,8 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                         PUSH_FR_REG(stk, logfile, RDX);
                     }
 
-                    break;
                 }
+            break;
             case POP:
                 #ifdef DEBUG
                 printf("\033[1;32mCase Pop.\033[0m\n");
@@ -151,8 +151,22 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 }
                 printf("\033[1;34mREGS\033[0m: %f %f %f %f\n", cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX);
 
+            break;
+            case JMP:
+                int_arg = *(int *)(cpu->cs + cpu->programm_counter);
+                printf("int_arg = %d\n", int_arg);
+                if(int_arg < 0){
+                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
+                    return -1;
+                }
+
+                cpu->programm_counter = int_arg;
+
+                printf("\033[1;32mCase JMP\033[0m\n");
+                printf("int_arg = %d\n", int_arg);
+                fprintf(logfile, "Case JMP\n");
+                fprintf(logfile, "int_arg = %d\n", int_arg);
                 break;
-            MAKE_COND_JMP("JMP", =,  JMP);
             MAKE_COND_JMP("JB",  <,  JB);
             MAKE_COND_JMP("JA",  >,  JA);
             MAKE_COND_JMP("JAE", >=, JAE);
@@ -166,31 +180,33 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                     printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
                     return -1;
                 }
+                cpu->programm_counter = (size_t)int_arg;
+
+                // TODO: VVVVVVV
+                // call   -> push (ip + sizeof(char)) + jmp to label
+                // return -> ip := pop
+                // TODO: memory RAM
 
                 printf("\033[1;32mCase CALL \033[0m\n");
                 printf("int_arg = %d\n", int_arg);
                 fprintf(logfile, "Case CALL\n");
                 fprintf(logfile, "int_arg = %d\n", int_arg);
 
-                cpu->programm_counter = (size_t)int_arg;
 
-                break;
+            break;
             case RET:
-                int_arg = *(int *)(cpu->cs + cpu->programm_counter);
-                printf("int_arg = %d\n", int_arg);
-                if(int_arg < 0){
-                    printf("\033[1;31mError\033[0m: Unknown pointer address.\n");
-                    return -1;
+                if(StackPop(stk, logfile, &second_operand)){
+                    printf("Bad ret pop!\n");
                 }
 
-                printf("\033[1;32mCase CALL \033[0m\n");
+                printf("\033[1;32mCase RET \033[0m\n");
                 printf("int_arg = %d\n", int_arg);
-                fprintf(logfile, "Case CALL\n");
+                fprintf(logfile, "Case RET\n");
                 fprintf(logfile, "int_arg = %d\n", int_arg);
 
-                cpu->programm_counter = (size_t)int_arg;
+                cpu->programm_counter = (size_t)second_operand;
 
-                break;
+            break;
             case DIV:
                 #ifdef DEBUG
                 printf("\033[1;32mCase DIV\033[0m\n");
@@ -212,7 +228,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                     fprintf(logfile, "Dividing by zero!\n");
                     return -1;
                 }
-                break;
+            break;
             case SUB:
                 #ifdef DEBUG
                 printf("\033[1;32mCase SUB.\033[0m\n");
@@ -227,7 +243,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 }
 
                 StackPush(stk, logfile, second_operand - first_operand);
-                break;
+            break;
             case IN:
                 #ifdef DEBUG
                 printf("\033[1;32mCase IN.\033[0m\n");
@@ -241,7 +257,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
 
                 StackPush(stk, logfile, first_operand);
 
-                break;
+            break;
             case MUL:
                 #ifdef DEBUG
                 printf("\033[1;32mCase MUL.\033[0m\n");
@@ -256,7 +272,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                 }
 
                 StackPush(stk, logfile, first_operand * second_operand);
-                break;
+            break;
             case OUT:
                 #ifdef DEBUG
                 printf("\033[1;32mCase OUT.\033[0m\n");
@@ -266,7 +282,7 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
                     printf("Bad first pop!\n");
                 }
                 fprintf(stdout, "\t\t\t\t[OUT]: %f\n", first_operand);
-                break;
+            break;
             case (HLT & COMMAND_BITS):
                 #ifdef DEBUG
                 printf("\033[1;32mCase HLT.\033[0m\n");
@@ -430,21 +446,43 @@ int kernel(Processor *cpu, FILE* logfile, const unsigned char* bin_buff){
 
 
 uint32_t CpuDump(Processor *cpu, FILE* logfile){
-    size_t space_counter = 0;
+    size_t space_counter = 0, codeframe_size = 324, line_size = 107;
     fprintf(logfile, "[CPU DUMP]\nRegisters:\n\tRAX = %f\n\tRBX = %f\n\tRCX = %f\n\tRDX = %f\nPC: %lu\n",
     cpu->RAX, cpu->RBX, cpu->RCX, cpu->RDX, cpu->programm_counter);
 
     fprintf(logfile, "Command segment dump:\n");
-    for(size_t i = 0; i + 1 < CPU_CS_SIZE && cpu->cs[i] != HLT; i++){
-        fprintf(logfile, "%03d ", cpu->cs[i]);
-    }
-    fprintf(logfile, "\n");
+//     for(size_t i = 0; i + 1 < CPU_CS_CAPACITY && cpu->cs[i] != HLT; i++){
+//         fprintf(logfile, "%03d ", cpu->cs[i]);
+//     }
+//     fprintf(logfile, "\n");
+//
+//     space_counter = 4 * (cpu->programm_counter);
+//     for(size_t i = 0; i < space_counter; i++){
+//         fprintf(logfile, " ");
+//     }
+//     fprintf(logfile, "^\n");
 
-    space_counter = 4 * (cpu->programm_counter);
-    for(size_t i = 0; i < space_counter; i++){
-        fprintf(logfile, " ");
+    size_t i = 0, curr_code_segment = 0;
+    printf("cpu->cs_size = %zu, (cpu->cs_size * 4) % (line_size - 7) = %zu\npc = %d", cpu->cs_size,
+            (cpu->cs_size * 4) % (line_size - 7), cpu->programm_counter);
+    while(i < cpu->cs_size && cpu->cs[i] != HLT){
+
+        if((cpu->programm_counter) >= (curr_code_segment * 25) &&
+           (cpu->programm_counter) < (curr_code_segment + 1) * 25){
+
+            fprintf(logfile, "––> ");
+            for(;i < ((curr_code_segment + 1) * (line_size - 7)) / 4; i++) fprintf(logfile, "%03d ", cpu->cs[i]);
+            fprintf(logfile, "\n");
+        }
+        else{
+            fprintf(logfile, "    ");
+            for(;i < ((curr_code_segment + 1) * (line_size - 7)) / 4; i++) fprintf(logfile, "%03d ", cpu->cs[i]);
+            fprintf(logfile, "\n");
+        }
+        curr_code_segment++;
     }
-    fprintf(logfile, "^\n");
+    for(size_t j = 0; j < (cpu->programm_counter % 25) + 1; j++) fprintf(logfile, "    ");
+    fprintf(logfile, " ^\n");
 
     return StackDump(&(cpu->stk), logfile);
 }
@@ -454,7 +492,7 @@ int CpuDtor(Processor *cpu, FILE* logfile){
     CPU_VERIF(cpu == nullptr, "cpu is nullptr!");
     StackDtor(&(cpu->stk), logfile);
 
-    for(size_t i = 0; i < CPU_CS_SIZE; i++){
+    for(size_t i = 0; i < CPU_CS_CAPACITY; i++){
         cpu->cs[i] = HLT;
     }
 

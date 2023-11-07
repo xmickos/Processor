@@ -55,14 +55,13 @@ bool is_pointer(char* string, size_t len){
     return false;
 }
 
-int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile){
+int string_processing_asm(MyFileStruct* FileStruct, FILE* bin_output, FILE* logfile){
     char* buff = FileStruct->buff, *ref_buff = FileStruct->buff;
     size_t line_counter = 0, len = 0, binary_pos_counter = 0, pointers_counter = 0, last_call_pos = 0;
     int int_arg = VM_POISON;
-    MyPointer pointers[CPU_CS_SIZE] = {};
+    MyPointer pointers[CPU_CS_CAPACITY] = {};
     bool silent_arg = false;
-    char curr_command[MAX_POINTERNAME_LEN] = {}, curr_arg[MAX_POINTERNAME_LEN] = {},
-         output_str[INIT_LEN] = {}, version[3 * INIT_LEN] = {}, last_pointer_name[MAX_POINTERNAME_LEN] = {};
+    char curr_command[MAX_POINTERNAME_LEN] = {}, curr_arg[MAX_POINTERNAME_LEN] = {}, last_pointer_name[MAX_POINTERNAME_LEN] = {};
 
     unsigned char opcode = (char)0u;
     unsigned char *char_binary_code = nullptr;
@@ -70,8 +69,8 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
     fprintf(logfile, "Initial buff:{\n%s\t}", buff);
 
-    sprintf(version, "Current signature: VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
-    fputs(version, output);
+    // sprintf(version, "Current signature: VERSION: %d, %d REGISTERS, %d COMMANDS\n", CPU_VERSION, NUM_OF_REGS, NUM_OF_COMMANDS);
+    // fputs(version, output);
 
     char_binary_code = (unsigned char*)calloc(5 * (FileStruct->num_of_str) + 4, sizeof(char));
 
@@ -98,10 +97,6 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         fprintf(logfile, "\nCommand: %s, len = %zu, buff:{%s\n\t}\n", curr_command, len, buff);
         fprintf(stdout, "\nCommand: %s, len = %zu, buff:{%s\n\t}\n", curr_command, len, buff);
 
-        // printf("\n");
-        // for(size_t jopa = 0; jopa < len; jopa++){
-        //     printf("curr_command[%zu] = %c == %d\n", jopa, curr_command[jopa], curr_command[jopa]);
-        // }
 
         if(*buff == '\n' || sscanf(buff, "%s%n", curr_arg, &len) == 0 || *buff == '\0'){
             fprintf(logfile, "Failed to read argument!\n");
@@ -196,9 +191,11 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 }
 
                 CHECKPOINT("IMREG_BIT");
-
-                opcode &= ~IMREG_BIT;
-                char_binary_code[binary_pos_counter++] = opcode;
+                if((opcode & COMMAND_BITS) < CALL || (opcode & COMMAND_BITS) > JNE){
+                    opcode &= ~IMREG_BIT;
+                    printf("SSSSSSSSSSSSSSSSSSSSUKA!\n");
+                    char_binary_code[binary_pos_counter++] = opcode;
+                }
 
                 if(opcode == PUSH){
                     printf("My intarg is %d\n", int_arg);
@@ -208,8 +205,11 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             }
 
             printf("\033[1;36mOpcode\033[0m: %d\n", opcode);
-            if((opcode & COMMAND_BITS) >= CALL && (opcode & COMMAND_BITS) <= JNE){
+
+            if((opcode & COMMAND_BITS) >= CALL && (opcode & COMMAND_BITS) <= JNE ){
+
                 CHECKPOINT("SOME JUMP.");
+
                 switch (opcode){
                 OPCODE_CASE(JB);
                 OPCODE_CASE(JA);
@@ -220,9 +220,21 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                 OPCODE_CASE(RET);
                 OPCODE_CASE(CALL);
                 }
+
                 printf("opcode: %d\n", opcode);
-                WRITE_INT(binary_pos_counter, JMPFLG);
-                binary_pos_counter += sizeof(int);
+
+                if(opcode == CALL){
+                    char_binary_code[binary_pos_counter++] = PUSH;
+                    WRITE_INT(binary_pos_counter, CALLFLG);
+                    binary_pos_counter += sizeof(int);
+                }
+
+                char_binary_code[binary_pos_counter++] = opcode;
+
+                if(opcode != RET){
+                    WRITE_INT(binary_pos_counter, JMPFLG);
+                    binary_pos_counter += sizeof(int);
+                }
             }
 
         }
@@ -254,11 +266,6 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             CHECKPOINT("After all command compares.\n");
         }
 
-        if(fputs(output_str, output)){
-            fprintf(logfile, "String written successfully!\n");
-            fprintf(logfile, "Written string: %s\n", output_str);
-        }
-
         if(!silent_arg){
             SKIP_STR();
         }
@@ -282,6 +289,7 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
 
     buff = ref_buff;
     strcpy(curr_command, "");
+    line_counter = 0;
 
     STRIKE_ME_OUT();
     STRIKE_ME_OUT();
@@ -308,27 +316,12 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
             printf("curr_command: %s\n", curr_command);
         }
 
-//         if(!strcmp(curr_command, "ret")){
-//             CHECKPOINT("ret case");
-//             last_pointer_name[strlen(last_pointer_name) - 1] = '\0';
-//             printf("last_pointer_name = %s\n", last_pointer_name);
-//             int_arg = simple_pointer_search(pointers, last_pointer_name, pointers_counter);
-//
-//             if(int_arg == -1){
-//                 printf("\033[1;31mError\033[0m: Error with ret, curr_command = %s.\nExiting...\n", curr_command);
-//                 return -1;
-//             }
-//
-//             WRITE_INT(i, pointers[int_arg].address);
-//             i += sizeof(int);
-//         }
-
         BITWISE_COMPARE_ASM(curr_command, "ret",  RET,  opcode);
-        if(opcode != 0){
-            CHECKPOINT("RET case.");
-            printf("last_call_pos = %zu\n", last_call_pos);
-            WRITE_INT(i, last_call_pos);
-        }
+        // if(opcode != 0){
+        //     CHECKPOINT("RET case.");
+        //     printf("last_call_pos = %zu\n", last_call_pos);
+        //     WRITE_INT(i, last_call_pos);
+        // }
 
         buff += len;
         if(sscanf(buff, "%d", &int_arg)){
@@ -366,15 +359,13 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
                     return -1;
                 }
 
-                WRITE_INT(i, pointers[int_arg].address);
-
-                i += sizeof(int);
-
                 if(opcode == CALL){
-                    CHECKPOINT("Call case.");
-                    last_call_pos = i;
-                    printf("last_call_pos = %zu\n", last_call_pos);
+                    WRITE_INT(i, 2*sizeof(int) + i + 1);
+                    i += sizeof(int) + 1;
+
                 }
+                WRITE_INT(i, pointers[int_arg].address);
+                i += sizeof(int);
             }
             buff++;
 
@@ -383,12 +374,14 @@ int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_outp
         BEAUTY_BIN_DUMP("After");
         STRIKE_ME_OUT();
         printf("\n\n");
+        line_counter++;
     }
 
     printf("\nchar_binary_code: binary_pos_counter = %zu\n", binary_pos_counter);
     for(size_t i = 0; i < binary_pos_counter; i++){
         printf("%3hhu ", char_binary_code[i]);
     }
+
 
 
     if(fwrite(char_binary_code, sizeof(char), binary_pos_counter + 2, bin_output) < binary_pos_counter){

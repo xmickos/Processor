@@ -21,7 +21,7 @@
 struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
-    size_t programm_counter = 0;
+    size_t programm_counter = 0, cs_size = 0;
     unsigned char cs[CPU_PC_SIZE] = {};
 };
 
@@ -147,7 +147,7 @@ struct MyPointer{
                 break;                                                                                                \
 
 #define OPCODE_CASE(bit_command) case bit_command:                                                                    \
-                    printf("\nJB case.\n");                                                                           \
+                    printf("\n" #bit_command " case.\n");                                                             \
                     break;                                                                                            \
 
 #define IS_JUMP(curr_command) !strcmp(curr_command, "jb") || !strcmp(curr_command, "jmp") ||                          \
@@ -160,51 +160,52 @@ struct MyPointer{
 
 
 enum FUNC_CODES{
-    CPU_VERSION     = (10),
-    NUM_OF_REGS     = (4),
-    NUM_OF_COMMANDS = (17),
-    CPU_CS_SIZE     = (128),
-    CPU_INIT_CAP    = (10),
-    REGISTER_BIT    = SINGLE_BIT(7),
-    RPOP            = SINGLE_BIT(3),
-    IMREG_BIT       = (0b10000000u),
-    REGISTER_BITS   = (0b01100000u),
-    COMMAND_BITS    = (0b00011111u)
+    CPU_VERSION       = (10),
+    NUM_OF_REGS       = (4),
+    NUM_OF_COMMANDS   = (17),
+    CPU_CS_CAPACITY   = (128),
+    CPU_INIT_CAP      = (10),
+    REGISTER_BIT      = SINGLE_BIT(7),
+    RPOP              = SINGLE_BIT(3),
+    IMREG_BIT         = (0b10000000u),
+    REGISTER_BITS     = (0b01100000u),
+    COMMAND_BITS      = (0b00011111u)
 };
 
 #define MASK_LOWER(bits) ((1U << (bits)) - 1)
 
 enum BIT_FUNC_CODES{
-    PUSH   = (0b00000001),
-    DIV    = (0b00000010),
-    SUB    = (0b00000011),
-    POP    = (0b00000100),
-    OUT    = (0b00000101),
-    IN     = (0b00000110),
-    MUL    = (0b00000111),
-    SQRT   = (0b00001000),
-    ADD    = (0b00001001),
-    CALL   = (0b00001010),
-    RET    = (0b00001100),
-    JMP    = (0b00001101),
-    JB     = (0b00001110),
-    JA     = (0b00001111),
-    JAE    = (0b00010000),
-    JBE    = (0b00010001),
-    JE     = (0b00010010),
-    JNE    = (0b00010011),
-    HLT    = (0b11111111),
-    JMPFLG = (0b11111110),
-    EOM    = (0b11111101),      // EOM = End of Main
-    RAX    = (0b00000000),
-    RBX    = (0b00100000),
-    RCX    = (0b01000000),
-    RDX    = (0b01100000),
+    PUSH    = (0b00000001),
+    DIV     = (0b00000010),
+    SUB     = (0b00000011),
+    POP     = (0b00000100),
+    OUT     = (0b00000101),
+    IN      = (0b00000110),
+    MUL     = (0b00000111),
+    SQRT    = (0b00001000),
+    ADD     = (0b00001001),
+    CALL    = (0b00001010),
+    RET     = (0b00001100),
+    JMP     = (0b00001101),
+    JB      = (0b00001110),
+    JA      = (0b00001111),
+    JAE     = (0b00010000),
+    JBE     = (0b00010001),
+    JE      = (0b00010010),
+    JNE     = (0b00010011),
+    HLT     = (0b11111111),
+    JMPFLG  = (0b11111110),
+    CALLFLG = (0b11111101),
+    EOM     = (0b11111100),      // EOM = End of Main
+    RAX     = (0b00000000),
+    RBX     = (0b00100000),
+    RCX     = (0b01000000),
+    RDX     = (0b01100000),
 };
 
 int read_from_file(const char* filename, MyFileStruct *FileStruct, FILE* logfile);
 
-int string_processing_asm(MyFileStruct* FileStruct, FILE* output, FILE* bin_output, FILE* logfile);
+int string_processing_asm(MyFileStruct* FileStruct, FILE* bin_output, FILE* logfile);
 
 void string_processing_disasm(char* buff, FILE* output, FILE* logfile);
 

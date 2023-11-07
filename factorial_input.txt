@@ -1,0 +1,36 @@
+in
+call fact:
+out
+eom
+
+fact:
+pop rax
+pop rbx
+push rbx
+push rbx
+push 1
+sub
+pop rbx
+push rbx
+push 1
+jne not_equal_case:
+push rbx
+push 1
+je equal_case:
+
+not_equal_case:
+push rax
+push rbx
+call fact:
+pop rcx
+pop rax
+push rcx
+jmp reverse:
+
+equal_case:
+push rbx
+reverse:
+mul
+push rax
+ret
+hlt
