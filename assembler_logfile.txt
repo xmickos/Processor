@@ -1,54 +1,194 @@
 Initial buff:{
 in
-in
-in
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+pop rdx
+push 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 Command: in, len = 2, buff:{
-in
-in
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+pop rdx
+push 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -61,429 +201,583 @@ FPU after all: 6
 Checkpoint After all command compares.
 
 New buff:{
-in
-in
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+pop rdx
+push 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: in, len = 3, buff:{
-in
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+Command: pop, len = 4, buff:{ rdx
+push 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
-Failed to read argument!
-curr_command = in, curr_arg = , Silentness = 1
+curr_command = pop, curr_arg = rdx, Silentness = 0
 Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 6
-Checkpoint After all command compares.
-
-New buff:{
-in
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+Checkpoint non-poison - case
+curr arg: rdx, register case.
+opcode after regs is 100
+full opcode after regs is 228
+New buff:{push 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: in, len = 3, buff:{
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
+Command: push, len = 4, buff:{ 0
 pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
-Failed to read argument!
-curr_command = in, curr_arg = , Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 6
-Checkpoint After all command compares.
-
-New buff:{
-call DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-	}
-
-Command: call, len = 5, buff:{ DiscR:
-push rax
-out
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-curr_command = call, curr_arg = DiscR:, Silentness = 0
+curr_command = push, curr_arg = 0, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT
-Checkpoint SOME JUMP.
-New buff:{push rax
-out
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-	}
-
-Command: push, len = 4, buff:{ rax
-out
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-curr_command = push, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
-New buff:{out
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-	}
-
-Command: out, len = 3, buff:{
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-Failed to read argument!
-curr_command = out, curr_arg = , Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 5
-Checkpoint After all command compares.
-
-New buff:{
-eom
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-	}
-
-Command: eom, len = 4, buff:{
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-Failed to read argument!
-curr_command = eom, curr_arg = , Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 253
-Checkpoint After all command compares.
-
-New buff:{
-
-DiscR:
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-	}
-
-Command: DiscR:, len = 8, buff:{
-
-pop rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-Failed to read argument!
-Checkpoint HERE!!!
-
-Command: pop, len = 4, buff:{ rax
-pop rbx
-pop rcx
-push rbx
-push rbx
-mul
-push 4
-push rax
-push rcx
-mul
-mul
-sub
-pop rax
-ret
-hlt
-
-	}
-curr_command = pop, curr_arg = rax, Silentness = 0
-Checkpoint first check
-Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 4
-full opcode after regs is 132
 New buff:{pop rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: pop, len = 3, buff:{ rbx
+push 0
 pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -493,33 +787,377 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 36
 full opcode after regs is 164
+New buff:{push 0
+pop rcx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 0
+pop rcx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 0, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
 New buff:{pop rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: pop, len = 3, buff:{ rcx
 push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -530,30 +1168,184 @@ curr arg: rcx, register case.
 opcode after regs is 68
 full opcode after regs is 196
 New buff:{push rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: push, len = 4, buff:{ rbx
+push 10
+jb first_cycle_yes:
 push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -563,29 +1355,546 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 33
 full opcode after regs is 161
+New buff:{push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jb, len = 2, buff:{ first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jb, curr_arg = first_cycle_yes:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
 New buff:{push rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: push, len = 4, buff:{ rbx
-mul
-push 4
-push rax
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -595,106 +1904,955 @@ Checkpoint non-poison - case
 curr arg: rbx, register case.
 opcode after regs is 33
 full opcode after regs is 161
-New buff:{mul
-push 4
-push rax
+New buff:{push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: mul, len = 3, buff:{
-push 4
-push rax
+Command: push, len = 4, buff:{ 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jae, len = 3, buff:{ first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jae, curr_arg = first_cycle_no:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: first_cycle_yes:, len = 16, buff:{
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
 Failed to read argument!
-curr_command = mul, curr_arg = , Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 7
-Checkpoint After all command compares.
+Checkpoint HERE!!!
 
-New buff:{
+Command: push, len = 4, buff:{ 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
 push 4
-push rax
-push rcx
-mul
-mul
 sub
-pop rax
-ret
-hlt
-	}
-
-Command: push, len = 5, buff:{ 4
-push rax
-push rcx
-mul
-mul
+push rbx
+push 4
 sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
-curr_command = push, curr_arg = 4, Silentness = 0
+curr_command = push, curr_arg = 0, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT
-New buff:{push rax
+New buff:{pop rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: push, len = 4, buff:{ rax
+Command: pop, len = 3, buff:{ rcx
 push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
-curr_command = push, curr_arg = rax, Silentness = 0
+curr_command = pop, curr_arg = rcx, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
-curr arg: rax, register case.
-opcode after regs is 1
-full opcode after regs is 129
+curr arg: rcx, register case.
+opcode after regs is 68
+full opcode after regs is 196
 New buff:{push rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: push, len = 4, buff:{ rcx
-mul
-mul
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -704,63 +2862,1351 @@ Checkpoint non-poison - case
 curr arg: rcx, register case.
 opcode after regs is 65
 full opcode after regs is 193
-New buff:{mul
-mul
+New buff:{push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: mul, len = 3, buff:{
-mul
+Command: push, len = 4, buff:{ 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jb, len = 2, buff:{ second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jb, curr_arg = second_cycle_yes:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jae, len = 3, buff:{ second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jae, curr_arg = second_cycle_no:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: second_cycle_yes:, len = 17, buff:{
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
 Failed to read argument!
-curr_command = mul, curr_arg = , Silentness = 1
-Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 7
-Checkpoint After all command compares.
+Checkpoint HERE!!!
 
-New buff:{
+Command: push, len = 4, buff:{ rbx
+push 4
+sub
+push rbx
+push 4
+sub
 mul
+push rcx
+push 4
 sub
-pop rax
-ret
-hlt
-	}
-
-Command: mul, len = 4, buff:{
+push rcx
+push 4
 sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
-Failed to read argument!
-curr_command = mul, curr_arg = , Silentness = 1
+curr_command = push, curr_arg = rbx, Silentness = 0
 Checkpoint first check
-Checkpoint after regs
-FPU after regs: 0
-FPU after all: 7
-Checkpoint After all command compares.
-
-New buff:{
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 4
 sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: sub, len = 4, buff:{
+Command: push, len = 4, buff:{ 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 4, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: sub, len = 3, buff:{
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -773,13 +4219,1803 @@ FPU after all: 3
 Checkpoint After all command compares.
 
 New buff:{
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
 pop rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 4, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: sub, len = 3, buff:{
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = sub, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 3
+Checkpoint After all command compares.
+
+New buff:{
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 4, buff:{
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 4, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: sub, len = 3, buff:{
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = sub, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 3
+Checkpoint After all command compares.
+
+New buff:{
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 4, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: sub, len = 3, buff:{
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = sub, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 3
+Checkpoint After all command compares.
+
+New buff:{
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 4, buff:{
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: add, len = 4, buff:{
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = add, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 9
+Checkpoint After all command compares.
+
+New buff:{
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
 Command: pop, len = 4, buff:{ rax
-ret
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
@@ -789,20 +6025,3427 @@ Checkpoint non-poison - case
 curr arg: rax, register case.
 opcode after regs is 4
 full opcode after regs is 132
-New buff:{ret
+New buff:{push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 	}
 
-Command: ret, len = 3, buff:{
+Command: push, len = 4, buff:{ rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rdx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rdx, register case.
+opcode after regs is 97
+full opcode after regs is 225
+New buff:{push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rdx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rdx, register case.
+opcode after regs is 97
+full opcode after regs is 225
+New buff:{mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 3, buff:{
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
 hlt
 
 	}
 Failed to read argument!
-curr_command = ret, curr_arg = , Silentness = 1
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 1
+full opcode after regs is 129
+New buff:{ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: ja, len = 2, buff:{ internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = ja, curr_arg = internal_point:, Silentness = 0
 Checkpoint first check
 Checkpoint non-poison - case
 Checkpoint IMREG_BIT
 Checkpoint SOME JUMP.
+New buff:{push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rdx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rdx, register case.
+opcode after regs is 97
+full opcode after regs is 225
+New buff:{push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rdx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rdx, register case.
+opcode after regs is 97
+full opcode after regs is 225
+New buff:{mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 3, buff:{
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 1
+full opcode after regs is 129
+New buff:{jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jbe, len = 3, buff:{ external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jbe, curr_arg = external_point:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: internal_point:, len = 16, buff:{
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: push, len = 4, buff:{ 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 1, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 3, buff:{
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: add, len = 3, buff:{
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = add, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 9
+Checkpoint After all command compares.
+
+New buff:{
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 4, buff:{ rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 4
+full opcode after regs is 132
+New buff:{pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 3, buff:{ [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = [rax], Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 21
+full opcode after regs is 149
+New buff:{jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jmp, len = 3, buff:{ after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jmp, curr_arg = after_second_cycle:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: external_point:, len = 16, buff:{
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: push, len = 4, buff:{ 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 0, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: mul, len = 3, buff:{
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = mul, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 7
+Checkpoint After all command compares.
+
+New buff:{
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 5, buff:{ rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: add, len = 3, buff:{
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = add, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 9
+Checkpoint After all command compares.
+
+New buff:{
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 4, buff:{ rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = rax, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 4
+full opcode after regs is 132
+New buff:{pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 3, buff:{ [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = [rax], Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rax, register case.
+opcode after regs is 21
+full opcode after regs is 149
+New buff:{jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jmp, len = 3, buff:{ after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jmp, curr_arg = after_second_cycle:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: after_second_cycle:, len = 20, buff:{
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: push, len = 4, buff:{ rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 1, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: add, len = 3, buff:{
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = add, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 9
+Checkpoint After all command compares.
+
+New buff:{
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 4, buff:{ rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 68
+full opcode after regs is 196
+New buff:{push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rcx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rcx, register case.
+opcode after regs is 65
+full opcode after regs is 193
+New buff:{push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jb, len = 2, buff:{ second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jb, curr_arg = second_cycle_yes:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: second_cycle_no:, len = 17, buff:{
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: push, len = 4, buff:{ rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 1, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: add, len = 3, buff:{
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+Failed to read argument!
+curr_command = add, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 9
+Checkpoint After all command compares.
+
+New buff:{
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: pop, len = 4, buff:{ rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = pop, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 36
+full opcode after regs is 164
+New buff:{push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jb, len = 2, buff:{ first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jb, curr_arg = first_cycle_yes:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = rbx, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+curr arg: rbx, register case.
+opcode after regs is 33
+full opcode after regs is 161
+New buff:{push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: push, len = 4, buff:{ 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = push, curr_arg = 10, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+New buff:{jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: jae, len = 3, buff:{ first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt
+
+	}
+curr_command = jae, curr_arg = first_cycle_no:, Silentness = 0
+Checkpoint first check
+Checkpoint non-poison - case
+Checkpoint IMREG_BIT
+Checkpoint SOME JUMP.
+New buff:{
+first_cycle_no:
+rmpr
+hlt
+	}
+
+Command: first_cycle_no:, len = 16, buff:{
+rmpr
+hlt
+
+	}
+Failed to read argument!
+Checkpoint HERE!!!
+
+Command: rmpr, len = 4, buff:{
+hlt
+
+	}
+Failed to read argument!
+curr_command = rmpr, curr_arg = , Silentness = 1
+Checkpoint first check
+Checkpoint after regs
+FPU after regs: 0
+FPU after all: 22
+Checkpoint After all command compares.
+
 New buff:{
 hlt
 	}
@@ -820,6 +9463,10 @@ Checkpoint After all command compares.
 
 New buff:{
 	}
-Checkpoint Call case.
 Checkpoint DA!
-Checkpoint RET case.
+Checkpoint DA!
+Checkpoint DA!
+Checkpoint DA!
+Checkpoint DA!
+Checkpoint DA!
+Checkpoint DA!

@@ -1,0 +1,95 @@
+in
+pop rdx
+push 0
+pop rbx
+push 0
+pop rcx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+first_cycle_yes:
+push 0
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+push rcx
+push 10
+jae second_cycle_no:
+second_cycle_yes:
+push rbx
+push 4
+sub
+push rbx
+push 4
+sub
+mul
+push rcx
+push 4
+sub
+push rcx
+push 4
+sub
+mul
+add
+pop rax
+push rdx
+push rdx
+mul
+push rax
+ja internal_point:
+push rdx
+push rdx
+mul
+push rax
+jbe external_point:
+
+internal_point:
+push 1
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+external_point:
+push 0
+push rbx
+push 10
+mul
+push rcx
+add
+pop rax
+pop [rax]
+jmp after_second_cycle:
+
+after_second_cycle:
+push rcx
+push 1
+add
+pop rcx
+push rcx
+push 10
+jb second_cycle_yes:
+
+second_cycle_no:
+push rbx
+push 1
+add
+pop rbx
+push rbx
+push 10
+jb first_cycle_yes:
+push rbx
+push 10
+jae first_cycle_no:
+
+first_cycle_no:
+rmpr
+hlt

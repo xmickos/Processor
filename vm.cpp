@@ -36,8 +36,6 @@ int main(const int argc, const char **argv){
 
     CpuDtor(&cpu, logfile);
 
-    // printf("\033[1;32mWELCOME TO DOLGOPA\033[0m\n");
-
     fclose(logfile);
     return 0;
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 #include "stack_headers.hpp"
 
 #define DEBUG
@@ -12,7 +13,9 @@
 
 #pragma once
 
-#define CPU_PC_SIZE 128
+#define CPU_CS_CAPACITY 256
+
+#define CPU_RAM_CAPACITY 128
 
 #define MAX_POINTERNAME_LEN 128
 
@@ -22,7 +25,8 @@ struct Processor{
     Stack stk;
     Elem_t RAX = 0, RBX = 0, RCX = 0, RDX = 0;
     size_t programm_counter = 0, cs_size = 0;
-    unsigned char cs[CPU_PC_SIZE] = {};
+    unsigned char cs[CPU_CS_CAPACITY] = {};
+    int RAM[CPU_RAM_CAPACITY] = {};
 };
 
 struct MyFileStruct{
@@ -138,10 +142,10 @@ struct MyPointer{
                 }                                                                                                     \
                                                                                                                       \
                 if(first_operand operand second_operand){                                                             \
-                    printf("Yes!\n");                                                                                 \
+                    fprintf(logfile, "Yes!\n");                                                                       \
                     cpu->programm_counter = (size_t)int_arg;                                                          \
                 }else{                                                                                                \
-                    printf("No!\n");                                                                                  \
+                    fprintf(logfile, "No!\n");                                                                        \
                     cpu->programm_counter += sizeof(int);                                                             \
                 }                                                                                                     \
                 break;                                                                                                \
@@ -155,15 +159,34 @@ struct MyPointer{
  !strcmp(curr_command, "je") || !strcmp(curr_command, "jne") || !strcmp(curr_command, "call") ||                      \
  !strcmp(curr_command, "ret")
 
- #define CLEAR_STR(curr_command)         for(size_t better_call_define = 0; better_call_define < MAX_POINTERNAME_LEN; \
+#define CLEAR_STR(curr_command)         for(size_t better_call_define = 0; better_call_define < MAX_POINTERNAME_LEN;  \
   better_call_define++) curr_command[better_call_define] = '\0';
 
+
+#define RAM_REG_ASSIGN(stk, cpu, register, int_arg, logfile)    case register:                                        \
+                        int_arg = (int)cpu->register;                                                                 \
+                        if(int_arg < 0){                                                                              \
+                            printf("\033[1;31mError\033[0m: Bad RAM address.\n");                                     \
+                            return -1;                                                                                \
+                        }                                                                                             \
+                        StackPush(stk, logfile, int_arg);                                                             \
+                    break;                                                                                            \
+
+#define READ_INT(int_arg, pc) do{ int_arg = *(int *)(cpu->cs + pc); pc += sizeof(int); }while(0)
+
+#define RAM_REG_POP(cpu, register, int_arg, operand, logfile)       case register:                                    \
+                        int_arg = (int)cpu->register;                                                                 \
+                        if(int_arg < 0){                                                                              \
+                            printf("\033[1;31mError\033[0m: Bad RAM address.\n");                                     \
+                            return -1;                                                                                \
+                        }                                                                                             \
+                        cpu->RAM[int_arg] = (int)operand;                                                                  \
+                    break;
 
 enum FUNC_CODES{
     CPU_VERSION       = (10),
     NUM_OF_REGS       = (4),
     NUM_OF_COMMANDS   = (17),
-    CPU_CS_CAPACITY   = (128),
     CPU_INIT_CAP      = (10),
     REGISTER_BIT      = SINGLE_BIT(7),
     RPOP              = SINGLE_BIT(3),
@@ -175,32 +198,35 @@ enum FUNC_CODES{
 #define MASK_LOWER(bits) ((1U << (bits)) - 1)
 
 enum BIT_FUNC_CODES{
-    PUSH    = (0b00000001),
-    DIV     = (0b00000010),
-    SUB     = (0b00000011),
-    POP     = (0b00000100),
-    OUT     = (0b00000101),
-    IN      = (0b00000110),
-    MUL     = (0b00000111),
-    SQRT    = (0b00001000),
-    ADD     = (0b00001001),
-    CALL    = (0b00001010),
-    RET     = (0b00001100),
-    JMP     = (0b00001101),
-    JB      = (0b00001110),
-    JA      = (0b00001111),
-    JAE     = (0b00010000),
-    JBE     = (0b00010001),
-    JE      = (0b00010010),
-    JNE     = (0b00010011),
-    HLT     = (0b11111111),
-    JMPFLG  = (0b11111110),
-    CALLFLG = (0b11111101),
-    EOM     = (0b11111100),      // EOM = End of Main
-    RAX     = (0b00000000),
-    RBX     = (0b00100000),
-    RCX     = (0b01000000),
-    RDX     = (0b01100000),
+    PUSH     = (0b00000001),
+    DIV      = (0b00000010),
+    SUB      = (0b00000011),
+    POP      = (0b00000100),
+    OUT      = (0b00000101),
+    IN       = (0b00000110),
+    MUL      = (0b00000111),
+    SQRT     = (0b00001000),
+    ADD      = (0b00001001),
+    CALL     = (0b00001010),
+    RET      = (0b00001100),
+    JMP      = (0b00001101),
+    JB       = (0b00001110),
+    JA       = (0b00001111),
+    JAE      = (0b00010000),
+    JBE      = (0b00010001),
+    JE       = (0b00010010),
+    JNE      = (0b00010011),
+    RAMPUSH  = (0b00010100),
+    RAMPOP   = (0b00010101),
+    RAMPAINT = (0b00010110),
+    HLT      = (0b11111111),
+    JMPFLG   = (0b11111110),
+    CALLFLG  = (0b11111101),
+    EOM      = (0b11111100),      // EOM = End of Main
+    RAX      = (0b00000000),
+    RBX      = (0b00100000),
+    RCX      = (0b01000000),
+    RDX      = (0b01100000),
 };
 
 int read_from_file(const char* filename, MyFileStruct *FileStruct, FILE* logfile);
@@ -224,3 +250,5 @@ unsigned char* read_from_bin_file(const char* filename, FILE* logfile);
 int simple_pointer_search(MyPointer *pointers, char *name, int pointers_counter);
 
 bool is_pointer(char* string, size_t len);
+
+bool have_parenthes(char* arg, size_t len);

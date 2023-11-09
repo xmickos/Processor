@@ -1,0 +1,12 @@
+for(int i = 0; i < 10;){
+    for(int j = 0; j < 10;){
+        if(i*i + j * j < R^2){
+            ram[q++] = '*';
+        }
+        else{
+            ram[q++] = '.';
+        }
+        j++;
+    }
+    i++;
+}
